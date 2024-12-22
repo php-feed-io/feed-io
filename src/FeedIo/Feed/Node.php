@@ -30,6 +30,8 @@ class Node implements NodeInterface, ElementsAwareInterface, ArrayableInterface
 
     protected ?string $host = null;
 
+    protected ?string $linkLinkForAnalysis = null;
+
     public function __construct()
     {
         $this->initElements();
@@ -135,10 +137,23 @@ class Node implements NodeInterface, ElementsAwareInterface, ArrayableInterface
         return $this->link;
     }
 
+    public function getLinkForAnalysis(): ?string
+    {
+        return $this->linkForAnalysis;
+    }
+
     public function setLink(string $link = null): NodeInterface
     {
         $this->link = $link;
         $this->setHost($link);
+        $this->setLinkForAnalysis($link);
+
+        return $this;
+    }
+
+    public function setLinkForAnalysis(string $link = null): NodeInterface
+    {
+        $this->linkForAnalysis = $link;
 
         return $this;
     }
@@ -168,6 +183,7 @@ class Node implements NodeInterface, ElementsAwareInterface, ArrayableInterface
             return;
         }
         
+        $itemFullLink = $this->getLinkForAnalysis();
         $itemLink = implode("/", array_slice(explode("/", $itemFullLink), 0, -1))."/";
 
         // Replaced links like href="#aaa/bbb.xxx"
@@ -190,10 +206,10 @@ class Node implements NodeInterface, ElementsAwareInterface, ArrayableInterface
 
     public function getHostFromLink(): ?string
     {
-        if (is_null($this->getLink())) {
+        if (is_null($this->getLinkForAnalysis())) {
             return null;
         }
-        $partsUrl = parse_url($this->getLink());
+        $partsUrl = parse_url($this->getLinkForAnalysis());
 
         return $partsUrl['scheme']."://".$partsUrl['host'];
     }
