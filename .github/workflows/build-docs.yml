@@ -6,6 +6,9 @@ on:
     paths:
       - 'docs/**'
 
+permissions:
+  contents: write  # Gives write permission to repository contents
+
 jobs:
   build:
     name: Deploy docs
