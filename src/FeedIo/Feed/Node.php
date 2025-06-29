@@ -164,6 +164,7 @@ class Node implements NodeInterface, ElementsAwareInterface, ArrayableInterface
         
         // Add null check before explode
         if (is_null($itemFullLink)) {
+            // If the link is null, no further processing is required. This is an intentional fallback.
             return;
         }
         
