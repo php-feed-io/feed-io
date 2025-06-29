@@ -161,6 +161,12 @@ class Node implements NodeInterface, ElementsAwareInterface, ArrayableInterface
         $this->pregReplaceInProperty('description', $pattern, '\1\2\3'.$host.'\4');
 
         $itemFullLink = $this->getLink();
+        
+        // Add null check before explode
+        if (is_null($itemFullLink)) {
+            return;
+        }
+        
         $itemLink = implode("/", array_slice(explode("/", $itemFullLink), 0, -1))."/";
 
         // Replaced links like href="#aaa/bbb.xxx"
