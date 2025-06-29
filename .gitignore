@@ -2,3 +2,4 @@ artifacts/
 vendor/
 .php_cs.cache
 .phpunit.result.cache
+.vscode
