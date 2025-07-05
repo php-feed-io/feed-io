@@ -30,7 +30,14 @@ class Link extends BaseLink
         ) {
             $href = $element->getAttribute('href');
             if (parse_url($href, PHP_URL_HOST) == null) {
-                $href = $node->getHostFromLink(). $href;
+                $baseUrl = $node->getHostFromLink();
+                if ($baseUrl !== null) {
+                    // Add slash if href doesn't start with one
+                    if (!str_starts_with($href, '/')) {
+                        $href = '/' . $href;
+                    }
+                    $href = $baseUrl . $href;
+                }
             }
             $node->setLink($href);
         }
