@@ -60,4 +60,157 @@ class LinkTest extends TestCase
             $document->saveXML()
         );
     }
+
+    public function testRelativeHrefWithoutLeadingSlash()
+    {
+        $item = new Item();
+        $item->setLink('https://example.com/some/path.html');
+        $document = new \DOMDocument();
+
+        $link = $document->createElement('link');
+        $link->setAttribute('href', 'page.html');
+        $link->setAttribute('rel', 'alternate');
+        $this->object->setProperty($item, $link);
+        
+        $this->assertEquals('https://example.com/page.html', $item->getLink());
+    }
+
+    public function testRelativeHrefWithLeadingSlash()
+    {
+        $item = new Item();
+        $item->setLink('https://example.com/some/path.html');
+        $document = new \DOMDocument();
+
+        $link = $document->createElement('link');
+        $link->setAttribute('href', '/absolute/path.html');
+        $link->setAttribute('rel', 'alternate');
+        $this->object->setProperty($item, $link);
+        
+        $this->assertEquals('https://example.com/absolute/path.html', $item->getLink());
+    }
+
+    public function testAbsoluteHrefIsNotModified()
+    {
+        $item = new Item();
+        $item->setLink('https://example.com/some/path.html');
+        $document = new \DOMDocument();
+
+        $link = $document->createElement('link');
+        $link->setAttribute('href', 'https://other.com/page.html');
+        $link->setAttribute('rel', 'alternate');
+        $this->object->setProperty($item, $link);
+        
+        $this->assertEquals('https://other.com/page.html', $item->getLink());
+    }
+
+    public function testNonAlternateLinkIsIgnored()
+    {
+        $item = new Item();
+        $item->setLink('https://example.com/original.html');
+        $document = new \DOMDocument();
+
+        $link = $document->createElement('link');
+        $link->setAttribute('href', '/new/path.html');
+        $link->setAttribute('rel', 'stylesheet');
+        $this->object->setProperty($item, $link);
+        
+        $this->assertEquals('https://example.com/original.html', $item->getLink());
+    }
+
+    public function testLinkWithoutRelAttributeWhenNodeLinkIsNull()
+    {
+        $item = new Item();
+        $item->setLink(null);
+        $document = new \DOMDocument();
+
+        $link = $document->createElement('link');
+        $link->setAttribute('href', '/path.html');
+        $this->object->setProperty($item, $link);
+        
+        $this->assertEquals('/path.html', $item->getLink());
+    }
+
+    public function testLinkWithNullBaseUrl()
+    {
+        $item = new Item();
+        $item->setLink(null);
+        $document = new \DOMDocument();
+
+        $link = $document->createElement('link');
+        $link->setAttribute('href', 'relative.html');
+        $link->setAttribute('rel', 'alternate');
+        $this->object->setProperty($item, $link);
+        
+        $this->assertEquals('relative.html', $item->getLink());
+    }
+
+    public function testProtocolRelativeUrl()
+    {
+        $item = new Item();
+        $item->setLink('https://example.com/path.html');
+        $document = new \DOMDocument();
+
+        $link = $document->createElement('link');
+        $link->setAttribute('href', '//cdn.example.com/resource.css');
+        $link->setAttribute('rel', 'alternate');
+        $this->object->setProperty($item, $link);
+        
+        $this->assertEquals('//cdn.example.com/resource.css', $item->getLink());
+    }
+
+    public function testFragmentUrl()
+    {
+        $item = new Item();
+        $item->setLink('https://example.com/page.html');
+        $document = new \DOMDocument();
+
+        $link = $document->createElement('link');
+        $link->setAttribute('href', '#section1');
+        $link->setAttribute('rel', 'alternate');
+        $this->object->setProperty($item, $link);
+        
+        $this->assertEquals('https://example.com/#section1', $item->getLink());
+    }
+
+    public function testQueryParameterUrl()
+    {
+        $item = new Item();
+        $item->setLink('https://example.com/page.html');
+        $document = new \DOMDocument();
+
+        $link = $document->createElement('link');
+        $link->setAttribute('href', '?param=value');
+        $link->setAttribute('rel', 'alternate');
+        $this->object->setProperty($item, $link);
+        
+        $this->assertEquals('https://example.com/?param=value', $item->getLink());
+    }
+
+    public function testHttpScheme()
+    {
+        $item = new Item();
+        $item->setLink('http://example.com/path.html');
+        $document = new \DOMDocument();
+
+        $link = $document->createElement('link');
+        $link->setAttribute('href', '/secure/path.html');
+        $link->setAttribute('rel', 'alternate');
+        $this->object->setProperty($item, $link);
+        
+        $this->assertEquals('http://example.com/secure/path.html', $item->getLink());
+    }
+
+    public function testEmptyHref()
+    {
+        $item = new Item();
+        $item->setLink('https://example.com/original.html');
+        $document = new \DOMDocument();
+
+        $link = $document->createElement('link');
+        $link->setAttribute('href', '');
+        $link->setAttribute('rel', 'alternate');
+        $this->object->setProperty($item, $link);
+        
+        $this->assertEquals('https://example.com/', $item->getLink());
+    }
 }
