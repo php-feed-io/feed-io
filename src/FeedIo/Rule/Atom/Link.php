@@ -28,7 +28,18 @@ class Link extends BaseLink
         ($element->hasAttribute('rel') && $element->getAttribute('rel') == 'alternate')
         || is_null($node->getLink())
         ) {
-            $node->setLink($element->getAttribute('href'));
+            $href = $element->getAttribute('href');
+            if (parse_url($href, PHP_URL_HOST) == null) {
+                $baseUrl = $node->getHostFromLink();
+                if ($baseUrl !== null) {
+                    // Add slash if href doesn't start with one
+                    if (!str_starts_with($href, '/')) {
+                        $href = '/' . $href;
+                    }
+                    $href = $baseUrl . $href;
+                }
+            }
+            $node->setLink($href);
         }
     }
 
