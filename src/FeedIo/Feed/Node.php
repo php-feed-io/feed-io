@@ -30,7 +30,7 @@ class Node implements NodeInterface, ElementsAwareInterface, ArrayableInterface
 
     protected ?string $host = null;
 
-    protected ?string $linkLinkForAnalysis = null;
+    protected ?string $linkForAnalysis = null;
 
     public function __construct()
     {
