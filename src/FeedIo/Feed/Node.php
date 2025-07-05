@@ -184,7 +184,7 @@ class Node implements NodeInterface, ElementsAwareInterface, ArrayableInterface
         }
         
         $itemFullLink = $this->getLinkForAnalysis();
-        $itemLink = implode("/", array_slice(explode("/", $itemFullLink), 0, -1))."/";
+        $itemLink = implode("/", array_slice(explode("/", $itemFullLink ?? ''), 0, -1))."/";
 
         // Replaced links like href="#aaa/bbb.xxx"
         $pattern = '(<\s*[^>]*)(href=|src=)(.?)(#)(?!(.(?!<code))*<\/code>)';
