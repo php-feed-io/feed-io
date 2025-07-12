@@ -1,5 +1,6 @@
 # feed-io
 
+[![Packagist](https://img.shields.io/packagist/v/php-feed-io/feed-io.svg)](https://packagist.org/packages/php-feed-io/feed-io)
 
 [feed-io](https://github.com/php-feed-io/feed-io) is a PHP library built to consume and serve news feeds. It features:
 
@@ -24,7 +25,7 @@ This library is highly extensible and is designed to adapt to many situations, s
 Use Composer to add feed-io into your project's requirements :
 
 ```sh
-    composer require debril/feed-io
+    composer require php-feed-io/feed-io
  ```
 
 # Requirements
