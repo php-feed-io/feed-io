@@ -20,7 +20,7 @@ class PublicId extends RuleAbstract
         $node->setPublicId($element->nodeValue);
         if ($element->nodeName === 'guid'
         && $element->getAttribute('isPermaLink') === 'true'
-        && is_null($node->getLink())) {
+        && $node->getLink() === null) {
             $node->setLink($element->nodeValue);
         }
     }
