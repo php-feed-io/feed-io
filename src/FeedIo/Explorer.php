@@ -26,7 +26,7 @@ class Explorer
     public function discover(string $url): array
     {
         $this->logger->info("discover feeds from {$url}");
-        $stream = $this->client->getResponse($url, new DateTime('@0'));
+        $stream = $this->client->getResponse($url, null);
 
         $internalErrors = libxml_use_internal_errors(true);
         $feeds = $this->extractFeeds($stream->getBody(), $url);
