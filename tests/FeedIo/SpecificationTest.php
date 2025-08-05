@@ -5,7 +5,7 @@ namespace FeedIo;
 use FeedIo\Rule\DateTimeBuilder;
 use FeedIo\Standard\Atom;
 use FeedIo\Standard\Json;
-use PHPStan\Testing\TestCase;
+use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
 
 class SpecificationTest extends TestCase
