@@ -32,7 +32,7 @@ class Result
     public function __construct(
         protected Document $document,
         protected FeedInterface $feed,
-        protected DateTime $modifiedSince,
+        protected ?DateTime $modifiedSince = null,
         protected ResponseInterface $response,
         protected string $url
     ) {
@@ -56,8 +56,15 @@ class Result
 
     public function getItemsSince(DateTime $since = null): iterable
     {
+        $startDate = $since ?? $this->modifiedSince;
+
+        // return all items if no start date is given
+        if ($startDate === null) {
+            return $this->feed;
+        }
+        
         $filter = new Chain();
-        $filter->add(new Since($since ?? $this->modifiedSince));
+        $filter->add(new Since($startDate));
 
         return $filter->filter($this->getFeed());
     }
