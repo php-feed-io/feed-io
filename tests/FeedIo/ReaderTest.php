@@ -131,7 +131,7 @@ class ReaderTest extends TestCase
         $feed = new Feed();
         $this->object->addParser($this->getParser());
         $result = $this->object->read('fakeurl', $feed);
-        $this->assertEquals(new \DateTime('1800-01-01'), $result->getModifiedSince());
+        $this->assertEquals(null, $result->getModifiedSince());
     }
 
     public function testReadException()
