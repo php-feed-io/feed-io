@@ -165,10 +165,10 @@ class Node implements NodeInterface, ElementsAwareInterface, ArrayableInterface
         }
     }
 
-    protected function setHostInContent(?string $host = null): void
+    public function setHostInContent(?string $host = null): NodeInterface
     {
         if (is_null($host)) {
-            return;
+            return $this;
         }
         // Replaced links like href="/aaa/bbb.xxx"
         $pattern = '(<\s*[^>]*)(href=|src=)(.?)(\/[^\/])(?!(.(?!<code))*<\/code>)';
@@ -187,6 +187,8 @@ class Node implements NodeInterface, ElementsAwareInterface, ArrayableInterface
         $pattern = '(<\s*[^>]*)(href=|src=)(.?)(\w+\b)(?![:])(?!(.(?!<code))*<\/code>)';
         $this->pregReplaceInProperty('content', $pattern, '\1\2\3'.$itemLink.'\4');
         $this->pregReplaceInProperty('description', $pattern, '\1\2\3'.$itemLink.'\4');
+
+        return $this;
     }
 
     public function pregReplaceInProperty(string $property, string $pattern, string $replacement): void
