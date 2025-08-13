@@ -35,9 +35,9 @@ class ResultTest extends TestCase
         $this->object = new Result(
             new Document('<feed></feed>'),
             new Feed(),
-            $this->modifiedSince,
             $response,
-            'http://localhost'
+            'http://localhost',
+            $this->modifiedSince
         );
     }
 
