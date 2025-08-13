@@ -32,9 +32,9 @@ class Result
     public function __construct(
         protected Document $document,
         protected FeedInterface $feed,
-        protected ?DateTime $modifiedSince = null,
         protected ResponseInterface $response,
-        protected string $url
+        protected string $url,
+        protected ?DateTime $modifiedSince = null
     ) {
         $this->date = new DateTime();
     }
