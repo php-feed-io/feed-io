@@ -28,6 +28,6 @@ class ResultMockFactory
         /** @var ResponseInterface $response */
         $response = new NullResponse();
 
-        return new Result($document, $feed, new \DateTime('@0'), $response, 'http://localhost/test.rss');
+        return new Result($document, $feed, $response, 'http://localhost/test.rss', new \DateTime('@0'));
     }
 }
