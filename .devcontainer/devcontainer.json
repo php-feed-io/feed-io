@@ -15,7 +15,14 @@
         "mehedidracula.php-namespace-resolver"
       ],
       "settings": {
-        "php.validate.executablePath": "/usr/local/bin/php"
+        "php.validate.executablePath": "/usr/local/bin/php",
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "terminal.integrated.profiles.linux": {
+          "bash": {
+            "path": "/bin/bash",
+            "args": ["-l"]
+          }
+        }
       }
     }
   },
