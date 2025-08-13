@@ -54,7 +54,7 @@ class Result
         return $this->feed;
     }
 
-    public function getItemsSince(DateTime $since = null): iterable
+    public function getItemsSince(?DateTime $since = null): iterable
     {
         $startDate = $since ?? $this->modifiedSince;
 

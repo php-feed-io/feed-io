@@ -38,7 +38,7 @@ class Node implements NodeInterface, ElementsAwareInterface, ArrayableInterface
         $this->categories = new ArrayIterator();
     }
 
-    public function set(string $name, string $value = null): NodeInterface
+    public function set(string $name, ?string $value = null): NodeInterface
     {
         $element = $this->newElement();
 
@@ -55,7 +55,7 @@ class Node implements NodeInterface, ElementsAwareInterface, ArrayableInterface
         return $this->author;
     }
 
-    public function setAuthor(AuthorInterface $author = null): NodeInterface
+    public function setAuthor(?AuthorInterface $author = null): NodeInterface
     {
         $this->author = $author;
 
@@ -96,7 +96,7 @@ class Node implements NodeInterface, ElementsAwareInterface, ArrayableInterface
         return $this->title;
     }
 
-    public function setTitle(string $title = null): NodeInterface
+    public function setTitle(?string $title = null): NodeInterface
     {
         $this->title = $title;
 
@@ -108,7 +108,7 @@ class Node implements NodeInterface, ElementsAwareInterface, ArrayableInterface
         return $this->publicId;
     }
 
-    public function setPublicId(string $publicId = null): NodeInterface
+    public function setPublicId(?string $publicId = null): NodeInterface
     {
         $this->publicId = $publicId;
 
@@ -120,7 +120,7 @@ class Node implements NodeInterface, ElementsAwareInterface, ArrayableInterface
         return $this->lastModified;
     }
 
-    public function setLastModified(DateTime $lastModified = null): NodeInterface
+    public function setLastModified(?DateTime $lastModified = null): NodeInterface
     {
         $this->lastModified = $lastModified;
 
@@ -142,7 +142,7 @@ class Node implements NodeInterface, ElementsAwareInterface, ArrayableInterface
         return $this->linkForAnalysis;
     }
 
-    public function setLink(string $link = null): NodeInterface
+    public function setLink(?string $link = null): NodeInterface
     {
         $this->link = $link;
         $this->setHost($link);
@@ -151,21 +151,21 @@ class Node implements NodeInterface, ElementsAwareInterface, ArrayableInterface
         return $this;
     }
 
-    public function setLinkForAnalysis(string $link = null): NodeInterface
+    public function setLinkForAnalysis(?string $link = null): NodeInterface
     {
         $this->linkForAnalysis = $link;
 
         return $this;
     }
 
-    protected function setHost(string $link = null): void
+    protected function setHost(?string $link = null): void
     {
         if (!is_null($link)) {
             $this->host = '//' . parse_url($link, PHP_URL_HOST);
         }
     }
 
-    protected function setHostInContent(string $host = null): void
+    protected function setHostInContent(?string $host = null): void
     {
         if (is_null($host)) {
             return;
