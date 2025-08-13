@@ -1,0 +1,449 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      
+        <link rel="next" href="codecontributions/">
+      
+      
+      <link rel="icon" href="assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.17">
+    
+    
+      
+        <title>feed-io Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.bcfcd587.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#feed-io" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="." title="feed-io Documentation" class="md-header__button md-logo" aria-label="feed-io Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            feed-io Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Home
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="feed-io Documentation" class="md-nav__button md-logo" aria-label="feed-io Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    feed-io Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="." class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="codecontributions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Code Quality
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="feed-io">feed-io</h1>
+<p><a href="https://github.com/php-feed-io/feed-io">feed-io</a> is a PHP library built to consume and serve RSS / Atom feeds.</p>
+<pre><code class="language-php">&lt;?php
+require 'vendor/autoload.php';
+
+use \FeedIo\Factory;
+
+$feedIo = Factory::create()-&gt;getFeedIo();
+$result = $feedIo-&gt;read('http://php.net/feed.atom');
+
+echo &quot;feed title : {$result-&gt;getFeed()-&gt;getTitle()} \n&quot;;
+foreach ($result-&gt;getFeed() as $item) {
+    echo &quot;{$item-&gt;getLastModified()-&gt;format(\DateTime::ATOM)} : {$item-&gt;getTitle()} \n&quot;;
+    echo &quot;{$item-&gt;getDescription()} \n&quot;;
+}
+</code></pre>
+<h1 id="installation">Installation</h1>
+<p>Use Composer to add feed-io into your project's requirements :</p>
+<pre><code class="language-bash">composer require php-feed-io/feed-io
+</code></pre>
+<h1 id="requirements">Requirements</h1>
+<table>
+<thead>
+<tr>
+<th>feed-io</th>
+<th>PHP</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>5.0</td>
+<td>8.0+</td>
+</tr>
+<tr>
+<td>6.0</td>
+<td>8.1+</td>
+</tr>
+</tbody>
+</table>
+<h1 id="usage">Usage</h1>
+<h2 id="cli">CLI</h2>
+<p>Let's suppose you installed feed-io using Composer, you can use its command line client to read feeds from your terminal :</p>
+<pre><code class="language-bash">./vendor/bin/feedio read http://php.net/feed.atom
+</code></pre>
+<p>You can specify the number of items you want to read using the --count option. The instruction below will display the latest item :</p>
+<pre><code class="language-bash">./vendor/bin/feedio read -c 1 http://php.net/feed.atom
+</code></pre>
+<h2 id="reading">Reading</h2>
+<p>feed-io is designed to read feeds across the internet and to publish your own. Its main class is FeedIo :</p>
+<pre><code class="language-php">&lt;?php
+// create a simple FeedIo instance
+$feedIo = \FeedIo\Factory::create()-&gt;getFeedIo();
+
+// read a feed
+$result = $feedIo-&gt;read($url);
+
+// get title
+$feedTitle = $result-&gt;getFeed()-&gt;getTitle();
+
+// iterate through items
+foreach( $result-&gt;getFeed() as $item ) {
+    echo $item-&gt;getTitle();
+}
+
+</code></pre>
+<h2 id="next-update-estimation">Next Update estimation</h2>
+<p>In order to save bandwidth, feed-io estimates the next time it will be relevant to read the feed and get new items from it.</p>
+<pre><code class="language-php">&lt;?php
+$nextUpdate = $result-&gt;getNextUpdate();
+echo &quot;computed next update: {$nextUpdate-&gt;format(\DATE_ATOM)}&quot;;
+
+// you may need to access the statistics
+$updateStats = $result-&gt;getUpdateStats();
+echo &quot;average interval in seconds: {$updateStats-&gt;getAverageInterval()}&quot;;
+</code></pre>
+<p>feed-io calculates the next update time by first detecting if the feed was active in the last 7 days and if not we consider it as sleepy. The next update date for a sleepy feed is set to the next day at the same time. If the feed isn't sleepy we use the average interval and the median interval by adding those intervals to the feed's last modified date and compare the result to the current time. If the result is in the future, then it's returned as the next update time. If none of them are in the future, we considered the feed will be updated quite soon, so the next update time is one hour later from the moment of the calculation. Please note: the fixed delays for sleepy and closed to be updated feeds can be set through Result::getNextUpdate() arguments, see Result for more details.</p>
+<h2 id="formatting-an-object-into-a-xml-stream">Formatting an object into a XML stream</h2>
+<pre><code class="language-php">&lt;?php
+// build the feed
+$feed = new FeedIo\Feed;
+$feed-&gt;setTitle('...');
+
+// convert it into Atom
+$atomString = $feedIo-&gt;toAtom($feed);
+
+// or ...
+$atomString = $feedIo-&gt;format($feed, 'atom');
+</code></pre>
+<h3 id="building-a-feed-including-medias">Building a feed including medias</h3>
+<pre><code class="language-php">// build the feed
+$feed = new FeedIo\Feed;
+$feed-&gt;setTitle('...');
+
+$item = $feed-&gt;newItem();
+
+// build the media
+$media = new \FeedIo\Feed\Item\Media
+$media-&gt;setUrl('http://yourdomain.tld/medias/some-podcast.mp3');
+$media-&gt;setType('audio/mpeg');
+
+// add it to the item
+$item-&gt;addMedia($media);
+
+$feed-&gt;add($item);
+</code></pre>
+<h2 id="activate-logging">Activate logging</h2>
+<p>feed-io natively supports PSR-3 logging, you can activate it by choosing a 'builder' in the factory :</p>
+<pre><code class="language-php">$feedIo = \FeedIo\Factory::create(['builder' =&gt; 'monolog'])-&gt;getFeedIo();
+</code></pre>
+<p>feed-io only provides a builder to create Monolog\Logger instances. You can write your own, as long as the Builder implements BuilderInterface.
+Building a FeedIo instance without the factory</p>
+<p>To create a new FeedIo instance you only need to inject two dependencies :</p>
+<ul>
+<li>an HTTP Client implementing FeedIo\Adapter\ClientInterface. It can be wrapper for an external library like FeedIo\Adapter\Guzzle\Client</li>
+<li>a PSR-3 logger implementing Psr\Log\LoggerInterface</li>
+</ul>
+<pre><code class="language-php">// first dependency : the HTTP client
+// here we use Guzzle as a dependency for the client
+$guzzle = new GuzzleHttp\Client();
+// Guzzle is wrapped in this adapter which is a FeedIo\Adapter\ClientInterface  implementation
+$client = new FeedIo\Adapter\Guzzle\Client($guzzle);
+
+// second dependency : a PSR-3 logger
+$logger = new Psr\Log\NullLogger();
+
+// now create FeedIo's instance
+$feedIo = new FeedIo\FeedIo($client, $logger);
+</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": ".", "features": [], "search": "assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="assets/javascripts/bundle.1e8ae164.min.js"></script>
+      
+    
+  </body>
+</html>
