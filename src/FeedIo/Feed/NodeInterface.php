@@ -141,4 +141,34 @@ interface NodeInterface
      * @return NodeInterface
      */
     public function set(string $name, ?string $value = null): NodeInterface;
+
+    /**
+     * Sets the host in content
+     *
+     * @param  string|null $host
+     * @return NodeInterface
+     */
+    public function setHostInContent(?string $host = null): NodeInterface;
+
+    /**
+     * Gets the host from link
+     *
+     * @return string|null
+     */
+    public function getHostFromLink(): ?string;
+
+    /**
+     * Sets the link for analysis
+     *
+     * @param  string|null $link
+     * @return NodeInterface
+     */
+    public function setLinkForAnalysis(?string $link = null): NodeInterface;
+
+    /**
+     * Gets the link for analysis
+     *
+     * @return string|null
+     */
+    public function getLinkForAnalysis(): ?string;
 }

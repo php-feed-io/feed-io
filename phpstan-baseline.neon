@@ -1,46 +1,10 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Call to an undefined method FeedIo\\Feed\\ItemInterface\:\:setHostInContent\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/FeedIo/Feed.php
-
-		-
-			message: '#^Call to an undefined method FeedIo\\Feed\\ItemInterface\:\:setLinkForAnalysis\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/FeedIo/Parser/XmlParser.php
-
-		-
-			message: '#^Deprecated in PHP 8\.0\: Required parameter \$url follows optional parameter \$modifiedSince\.$#'
-			identifier: parameter.requiredAfterOptional
-			count: 1
-			path: src/FeedIo/Reader/Result.php
-
-		-
-			message: '#^Deprecated in PHP 8\.1\: Required parameter \$response follows optional parameter \$modifiedSince\.$#'
-			identifier: parameter.requiredAfterOptional
-			count: 1
-			path: src/FeedIo/Reader/Result.php
-
-		-
 			message: '#^Offset float on list in isset\(\) does not exist\.$#'
 			identifier: isset.offset
 			count: 1
 			path: src/FeedIo/Reader/Result/UpdateStats.php
-
-		-
-			message: '#^Call to an undefined method FeedIo\\Feed\\NodeInterface\:\:getHostFromLink\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/FeedIo/Rule/Atom/Link.php
-
-		-
-			message: '#^Call to an undefined method FeedIo\\Feed\\NodeInterface\:\:getHostFromLink\(\)\.$#'
-			identifier: method.notFound
-			count: 1
-			path: src/FeedIo/Rule/Link.php
 
 		-
 			message: '#^PHPDoc tag @var with type FeedIo\\Reader\\FixerAbstract is not subtype of native type FeedIo\\Reader\\Fixer\\HttpLastModified\|FeedIo\\Reader\\Fixer\\PublicId\.$#'

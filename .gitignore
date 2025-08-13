@@ -5,3 +5,4 @@ vendor/
 .php-cs-fixer.cache
 phpunit.xml
 .vscode/
+phpstan.neon
