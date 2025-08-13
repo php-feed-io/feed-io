@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Add logic to set the node's link from the <guid> element when isPermaLink="true" and no link is present. (#12)
+- Do no longer default to 1800-01-01 as date for fetching feeds (#15)
 
 ### Fixed
-- Fix: Analysis of relative links for the Atom feed (#13)
+- Analysis of relative links for the Atom feed (#10)
