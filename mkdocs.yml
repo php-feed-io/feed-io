@@ -1,3 +1,7 @@
 site_name: feed-io Documentation
 theme:
   name: material
+
+nav:
+  - Home: index.md
+  - Code Quality: codecontributions.md
