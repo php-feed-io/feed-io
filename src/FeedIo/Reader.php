@@ -73,7 +73,7 @@ class Reader
             $feed->setLink($url);
             $document = $this->handleResponse($response, $feed);
 
-            return new Result($document, $feed, $modifiedSince, $response, $url);
+            return new Result($document, $feed, $response, $url, $modifiedSince);
         } catch (\Exception $e) {
             $this->logger->warning("{$url} read error : {$e->getMessage()}");
             throw new ReadErrorException($e->getMessage(), $e->getCode(), $e);
