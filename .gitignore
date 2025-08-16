@@ -6,3 +6,5 @@ vendor/
 phpunit.xml
 .vscode/
 phpstan.neon
+# mkdocs
+site
