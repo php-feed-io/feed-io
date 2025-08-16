@@ -1,6 +1,9 @@
 # feed-io
 
 [![Packagist](https://img.shields.io/packagist/v/php-feed-io/feed-io.svg)](https://packagist.org/packages/php-feed-io/feed-io)
+[![Documentation](https://img.shields.io/badge/docs-latest-blue.svg)](https://php-feed-io.github.io/feed-io/)
+
+**📖 [Read the full documentation](https://php-feed-io.github.io/feed-io/)**
 
 [feed-io](https://github.com/php-feed-io/feed-io) is a PHP library built to consume and serve news feeds. It features:
 

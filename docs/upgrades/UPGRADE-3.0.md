@@ -7,6 +7,8 @@ In version 2.x FeedIo::format() returned a DomDocument. Now that feed-io support
 Before :
 
 ```php
+<?php
+
 // Feed creation
 $feed = new \FeedIo\Feed();
 
@@ -27,6 +29,8 @@ Now you get the string :
 
 
 ```php
+<?php
+
 // Feed creation
 $feed = new \FeedIo\Feed();
 
@@ -43,6 +47,8 @@ Instead of a DomDocument.
 Before :
 
 ```php
+<?php
+
 $feedIo = \FeedIo\Factory::create()->getFeedIo();
 
 $result = $feedIo->read('http://php.net/feed.atom');
@@ -54,6 +60,8 @@ $dom = $result->getDocument();
 After :
 
 ```php
+<?php
+
 $feedIo = \FeedIo\Factory::create()->getFeedIo();
 
 $result = $feedIo->read('http://php.net/feed.atom');
@@ -62,7 +70,7 @@ $dom = $result->getDocument()->getDOMDocument();
 
 ```
 
-This is because Result::getDocument()'s return value is a wrapper for both XML and JSON streams.
+This is because `Result::getDocument()`'s return value is a wrapper for both XML and JSON streams.
 
 ### That's it
 

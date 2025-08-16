@@ -6,18 +6,20 @@ The major change in version 4.0 is the full migration to PHP 7.1. It has an impa
 
 From now on, all types are explicits in method signatures. It has an impact on classes that implements :
 
- - \FeedIo\FeedInterface 
- - \FeedIo\Feed\ItemInterface
- - \FeedIo\Feed\NodeInterface
- - \FeedIo\Feed\ElementsAwareInterface
- - \FeedIo\Feed\Item\AuthorInterface
- - \FeedIo\Feed\Item\MediaInterface
- - \FeedIo\Feed\Node\CategoryInterface
- - \FeedIo\Feed\Node\ElementInterface
+ - `\FeedIo\FeedInterface`
+ - `\FeedIo\Feed\ItemInterface`
+ - `\FeedIo\Feed\NodeInterface`
+ - `\FeedIo\Feed\ElementsAwareInterface`
+ - `\FeedIo\Feed\Item\AuthorInterface`
+ - `\FeedIo\Feed\Item\MediaInterface`
+ - `\FeedIo\Feed\Node\CategoryInterface`
+ - `\FeedIo\Feed\Node\ElementInterface`
 
 For instance, `FeedIo\FeedInterface::setUrl($url)` becomes :
 
 ```php
+<?php
+
     /**
      * @param string $url
      * @return FeedInterface
@@ -27,6 +29,8 @@ For instance, `FeedIo\FeedInterface::setUrl($url)` becomes :
 As a consequence, you need to adapt any class that implements `FeedIo\FeedInterface` according to the new signature : 
 
 ```php
+<?php
+
     /**
      * @param string $url
      * @return FeedInterface
@@ -41,6 +45,8 @@ As a consequence, you need to adapt any class that implements `FeedIo\FeedInterf
 becomes : 
 
 ```php
+<?php
+
     /**
      * @param string $url
      * @return FeedInterface
