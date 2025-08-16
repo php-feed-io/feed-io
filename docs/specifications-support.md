@@ -4,7 +4,7 @@ This document explains which attributes are supported by feed-io and how to acce
 
 ## top level document : feed (atom) / channel (rss) / top-level (json)
 
-interface : FeedInterface
+**interface : FeedInterface**
 
 | atom            | rss                     | json          | getter          | setter          |
 | --------------- | ----------------------- | ------------- | --------------- | --------------- |
@@ -36,7 +36,7 @@ interface : FeedInterface
 
 ## entry (atom) / item (rss) / item (json)
 
-Interface : ItemInterface
+**Interface : ItemInterface**
 
 | atom                | rss         | json                        | getter          | setter          |
 | ------------------- | ----------- | --------------------------- | --------------- | --------------- |
