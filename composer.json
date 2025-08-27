@@ -35,7 +35,8 @@
         "phpstan/phpstan": "^2.1.22",
         "friendsofphp/php-cs-fixer": "^3.5",
         "php-http/mock-client": "^1.5",
-        "rector/rector": "^2.1"
+        "rector/rector": "^2.1",
+        "php-http/guzzle7-adapter": "^1.1"
     },
     "suggest": {
         "monolog/monolog": "Allows to handle logs",
