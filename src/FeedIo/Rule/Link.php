@@ -17,7 +17,7 @@ class Link extends RuleAbstract
      */
     public function setProperty(NodeInterface $node, \DOMElement $element): void
     {
-        $nodeValue = $element->nodeValue;
+        $nodeValue = trim($element->nodeValue);
         if (parse_url($nodeValue, PHP_URL_HOST) == null) {
             $nodeValue = $node->getHostFromLink(). $nodeValue;
         }
