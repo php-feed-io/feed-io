@@ -40,7 +40,9 @@ function read(FeedIo $feedIo, string $url)
 
     $items = array_reverse(iterator_to_array($feed));
     foreach( $items as $i => $item ) {
-        echo "\033[32m{$item->getLastModified()->format(\DateTime::ATOM)} - \033[34m{$item->getTitle()}\033[0m:" . PHP_EOL;
+        $title = trim(preg_replace('/\s+/', ' ', $item->getTitle()));
+        echo "\033[32m{$item->getLastModified()->format(\DateTime::ATOM)}\033[0m - \033[34m{$title}\033[0m" . PHP_EOL;
+        echo "\033[36m{$item->getLink()}\033[0m" . PHP_EOL;
         echo "\t". strip_tags(nl2br($item->getContent())) . PHP_EOL;
     }
 
