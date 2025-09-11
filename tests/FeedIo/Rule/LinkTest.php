@@ -58,4 +58,30 @@ class LinkTest extends TestCase
 
         $this->assertXmlStringEqualsXmlString('<feed><link>' . self::LINK .'</link></feed>', $document->saveXML());
     }
+
+    public function testSetWithWhitespace()
+    {
+        $item = new Item();
+        // No initial link needed since we're testing absolute URLs with whitespace
+
+        // Test URL with leading/trailing whitespace (like in RSS feeds)
+        $urlWithWhitespace = "\nhttps://www.somedomain.de/test-article/view/news/123456";
+        $expectedUrl = 'https://www.somedomain.de/test-article/view/news/123456';
+
+        $this->object->setProperty($item, new \DOMElement('link', $urlWithWhitespace));
+        $this->assertEquals($expectedUrl, $item->getLink());
+    }
+
+    public function testSetWithRelativeUrl()
+    {
+        $item = new Item();
+        $item->setLink('https://example.com/base');
+
+        // Test relative URL should still work correctly
+        $relativeUrl = '/test-path';
+        $expectedUrl = 'https://example.com/test-path';
+
+        $this->object->setProperty($item, new \DOMElement('link', $relativeUrl));
+        $this->assertEquals($expectedUrl, $item->getLink());
+    }
 }
