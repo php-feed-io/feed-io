@@ -11,6 +11,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [v6.1.2] - 2025-09-29
+## Fixed
+- Trim whitespace from URLs in Link properties and add tests for whitespace handling and relative URLs (#26)
+- bin/feedio was not working anymore (#25)
+
+## [v6.1.1] - 2025-08-16
+### Changed
+- Code quality improvements (#21)
+
 ## [v6.1.0] - 2025-08-13
 ### Changed
 - Add logic to set the node's link from the <guid> element when isPermaLink="true" and no link is present. (#12)
