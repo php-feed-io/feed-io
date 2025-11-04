@@ -62,6 +62,12 @@ class Client implements ClientInterface
             case 200:
             case 304:
                 return new Response($psrResponse, $duration);
+            case 301:
+            case 302:
+            case 303:
+            case 307:
+            case 308:
+                return $this->request($method, $psrResponse->getHeaderLine('Location'), $modifiedSince);
             case 404:
                 throw new NotFoundException('not found', $duration);
             default:
