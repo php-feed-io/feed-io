@@ -15,6 +15,8 @@ use Psr\Http\Client\ClientInterface as PsrClientInterface;
 
 class Client implements ClientInterface
 {
+    private const MAX_REDIRECTS = 10;
+
     public function __construct(private readonly PsrClientInterface $client)
     {
     }
@@ -41,11 +43,23 @@ class Client implements ClientInterface
      * @param string $method
      * @param string $url
      * @param DateTime|null $modifiedSince
+     * @param int $redirectCount
      * @return ResponseInterface
      * @throws ClientExceptionInterface
      */
-    protected function request(string $method, string $url, ?DateTime $modifiedSince = null): ResponseInterface
-    {
+    protected function request(
+        string $method,
+        string $url,
+        ?DateTime $modifiedSince = null,
+        int $redirectCount = 0
+    ): ResponseInterface {
+        if ($redirectCount >= self::MAX_REDIRECTS) {
+            throw new ServerErrorException(
+                new \Nyholm\Psr7\Response(508, [], 'Too many redirects'),
+                0
+            );
+        }
+
         $headers = [];
 
         if ($modifiedSince) {
@@ -64,14 +78,102 @@ class Client implements ClientInterface
                 return new Response($psrResponse, $duration);
             case 301:
             case 302:
-            case 303:
             case 307:
             case 308:
-                return $this->request($method, $psrResponse->getHeaderLine('Location'), $modifiedSince);
+                return $this->handleRedirect(
+                    $method,
+                    $url,
+                    $psrResponse,
+                    $modifiedSince,
+                    $redirectCount,
+                    $duration
+                );
+            case 303:
+                // 303 See Other always requires GET
+                return $this->handleRedirect(
+                    'GET',
+                    $url,
+                    $psrResponse,
+                    $modifiedSince,
+                    $redirectCount,
+                    $duration
+                );
             case 404:
                 throw new NotFoundException('not found', $duration);
             default:
                 throw new ServerErrorException($psrResponse, $duration);
         }
+    }
+
+    /**
+     * Handle HTTP redirect responses
+     *
+     * @param string $method
+     * @param string $currentUrl
+     * @param \Psr\Http\Message\ResponseInterface $psrResponse
+     * @param DateTime|null $modifiedSince
+     * @param int $redirectCount
+     * @param float $duration
+     * @return ResponseInterface
+     * @throws ClientExceptionInterface
+     */
+    protected function handleRedirect(
+        string $method,
+        string $currentUrl,
+        \Psr\Http\Message\ResponseInterface $psrResponse,
+        ?DateTime $modifiedSince,
+        int $redirectCount,
+        float $duration
+    ): ResponseInterface {
+        $location = $psrResponse->getHeaderLine('Location');
+
+        if (empty($location)) {
+            throw new ServerErrorException($psrResponse, $duration);
+        }
+
+        // Handle relative URLs
+        $redirectUrl = $this->resolveRedirectUrl($currentUrl, $location);
+
+        return $this->request($method, $redirectUrl, $modifiedSince, $redirectCount + 1);
+    }
+
+    /**
+     * Resolve potentially relative redirect URL to absolute URL
+     *
+     * @param string $currentUrl
+     * @param string $location
+     * @return string
+     */
+    protected function resolveRedirectUrl(string $currentUrl, string $location): string
+    {
+        // If location is already absolute, return it
+        if (preg_match('/^https?:\/\//i', $location)) {
+            return $location;
+        }
+
+        // Parse current URL
+        $parts = parse_url($currentUrl);
+        if (!$parts) {
+            return $location;
+        }
+
+        $scheme = $parts['scheme'] ?? 'http';
+        $host = $parts['host'] ?? '';
+
+        // Handle absolute path (starts with /)
+        if (str_starts_with($location, '/')) {
+            $port = isset($parts['port']) ? ':' . $parts['port'] : '';
+            return "{$scheme}://{$host}{$port}{$location}";
+        }
+
+        // Handle relative path
+        $path = $parts['path'] ?? '/';
+        $basePath = dirname($path);
+        if ($basePath === '.') {
+            $basePath = '/';
+        }
+
+        $port = isset($parts['port']) ? ':' . $parts['port'] : '';
+        return "{$scheme}://{$host}{$port}{$basePath}/{$location}";
     }
 }

@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- HTTP redirect handling (301, 302, 303, 307, 308) with loop protection and relative URL support (#29)
+
 ### Changed
 
 ### Fixed
