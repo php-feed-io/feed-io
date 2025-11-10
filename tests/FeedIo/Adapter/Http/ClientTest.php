@@ -305,4 +305,90 @@ class ClientTest extends TestCase
 
         $this->assertEquals(200, $response->getStatusCode());
     }
+
+    public function testNormalizesRelativePathWithDotDotSegments(): void
+    {
+        // Current URL: https://example.com/path/to/feed.xml
+        // Redirect to: ../newpath/feed.xml
+        // Should resolve to: https://example.com/path/newpath/feed.xml
+        
+        $redirectResponse = new PsrResponse(301, ['Location' => '../newpath/feed.xml']);
+        $finalResponse = new PsrResponse(200, [], 'content');
+
+        $requestCount = 0;
+        $this->psrClient
+            ->expects($this->exactly(2))
+            ->method('sendRequest')
+            ->willReturnCallback(function (RequestInterface $request) use ($redirectResponse, $finalResponse, &$requestCount) {
+                $requestCount++;
+                
+                if ($requestCount === 1) {
+                    $this->assertEquals('https://example.com/path/to/feed.xml', (string) $request->getUri());
+                    return $redirectResponse;
+                }
+                
+                // Verify the path was properly normalized
+                $this->assertEquals('https://example.com/path/newpath/feed.xml', (string) $request->getUri());
+                return $finalResponse;
+            });
+
+        $response = $this->client->getResponse('https://example.com/path/to/feed.xml');
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    public function testNormalizesAbsolutePathWithDotDotSegments(): void
+    {
+        // Redirect to: /path/../other/feed.xml
+        // Should resolve to: /other/feed.xml
+        
+        $redirectResponse = new PsrResponse(301, ['Location' => '/path/../other/feed.xml']);
+        $finalResponse = new PsrResponse(200, [], 'content');
+
+        $requestCount = 0;
+        $this->psrClient
+            ->expects($this->exactly(2))
+            ->method('sendRequest')
+            ->willReturnCallback(function (RequestInterface $request) use ($redirectResponse, $finalResponse, &$requestCount) {
+                $requestCount++;
+                
+                if ($requestCount === 1) {
+                    return $redirectResponse;
+                }
+                
+                // Verify the path was properly normalized
+                $this->assertEquals('https://example.com/other/feed.xml', (string) $request->getUri());
+                return $finalResponse;
+            });
+
+        $response = $this->client->getResponse('https://example.com/some/path.xml');
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    public function testNormalizesPathWithDotSegments(): void
+    {
+        // Redirect to: /path/./to/./feed.xml
+        // Should resolve to: /path/to/feed.xml
+        
+        $redirectResponse = new PsrResponse(301, ['Location' => '/path/./to/./feed.xml']);
+        $finalResponse = new PsrResponse(200, [], 'content');
+
+        $requestCount = 0;
+        $this->psrClient
+            ->expects($this->exactly(2))
+            ->method('sendRequest')
+            ->willReturnCallback(function (RequestInterface $request) use ($redirectResponse, $finalResponse, &$requestCount) {
+                $requestCount++;
+                
+                if ($requestCount === 1) {
+                    return $redirectResponse;
+                }
+                
+                // Verify the path was properly normalized
+                $this->assertEquals('https://example.com/path/to/feed.xml', (string) $request->getUri());
+                return $finalResponse;
+            });
+
+        $response = $this->client->getResponse('https://example.com/old.xml');
+        $this->assertEquals(200, $response->getStatusCode());
+    }
 }

@@ -171,22 +171,73 @@ class Client implements ClientInterface
 
         $scheme = $parts['scheme'] ?? 'http';
         $host = $parts['host'] ?? '';
+        $port = isset($parts['port']) ? ':' . $parts['port'] : '';
 
         // Handle absolute path (starts with /)
         if (str_starts_with($location, '/')) {
-            $port = isset($parts['port']) ? ':' . $parts['port'] : '';
-            return "{$scheme}://{$host}{$port}{$location}";
+            $normalizedPath = $this->normalizePath($location);
+            return "{$scheme}://{$host}{$port}{$normalizedPath}";
         }
 
         // Handle relative path
-        $path = $parts['path'] ?? '/';
-        $basePath = dirname($path);
+        $currentPath = $parts['path'] ?? '/';
+        $basePath = dirname($currentPath);
         if ($basePath === '.') {
             $basePath = '/';
         }
 
-        $port = isset($parts['port']) ? ':' . $parts['port'] : '';
+        // Combine base path with relative location
         $separator = str_ends_with($basePath, '/') ? '' : '/';
-        return "{$scheme}://{$host}{$port}{$basePath}{$separator}{$location}";
+        $combinedPath = "{$basePath}{$separator}{$location}";
+        
+        // Normalize the path to resolve . and .. segments
+        $normalizedPath = $this->normalizePath($combinedPath);
+
+        return "{$scheme}://{$host}{$port}{$normalizedPath}";
+    }
+
+    /**
+     * Normalize a URL path by resolving . and .. segments
+     *
+     * @param string $path
+     * @return string
+     */
+    protected function normalizePath(string $path): string
+    {
+        // Split path into segments
+        $segments = explode('/', $path);
+        $normalized = [];
+
+        foreach ($segments as $segment) {
+            if ($segment === '' || $segment === '.') {
+                // Skip empty segments and current directory references
+                if ($segment === '' && empty($normalized)) {
+                    // Keep leading slash
+                    $normalized[] = '';
+                }
+                continue;
+            } elseif ($segment === '..') {
+                // Go up one directory
+                if (!empty($normalized) && end($normalized) !== '' && end($normalized) !== '..') {
+                    array_pop($normalized);
+                } elseif (empty($normalized) || end($normalized) === '..') {
+                    // Can't go above root or if we're already tracking ..
+                    $normalized[] = '..';
+                }
+            } else {
+                $normalized[] = $segment;
+            }
+        }
+
+        // Reconstruct path
+        $result = implode('/', $normalized);
+        
+        // Ensure absolute paths start with /
+        if (str_starts_with($path, '/') && !str_starts_with($result, '/')) {
+            $result = '/' . $result;
+        }
+
+        return $result ?: '/';
     }
 }
+
