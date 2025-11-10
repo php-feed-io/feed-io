@@ -10,8 +10,9 @@
 
 require __DIR__.DIRECTORY_SEPARATOR.'bootstrap.php';
 
-use \FeedIo\Factory;
 use \FeedIo\Feed;
+use \FeedIo\Adapter\Http\Client;
+use \Http\Discovery\Psr18ClientDiscovery;
 
 $feed = new Feed();
 $feed->setLink('https://example.com');
@@ -28,7 +29,8 @@ $item->setContent("Hope you like the code you are reading");
 $item->setSummary('my summary');
 $feed->add($item);
 
-$feedIo = Factory::create()->getFeedIo();
+$client = new Client(Psr18ClientDiscovery::find());
+$feedIo = new \FeedIo\FeedIo($client);
 
 echo 'ATOM' . PHP_EOL;
 echo $feedIo->format($feed, 'atom');

@@ -10,7 +10,11 @@
 
 require __DIR__.DIRECTORY_SEPARATOR.'bootstrap.php';
 
-$feedIo = \FeedIo\Factory::create()->getFeedIo();
+use \FeedIo\Adapter\Http\Client;
+use \Http\Discovery\Psr18ClientDiscovery;
+
+$client = new Client(Psr18ClientDiscovery::find());
+$feedIo = new \FeedIo\FeedIo($client);
 
 $feedIo->getDateTimeBuilder()->setFeedTimezone(new \DateTimeZone('-0500'));
 $result = $feedIo->read('http://news.php.net/group.php?group=php.announce&format=rss');

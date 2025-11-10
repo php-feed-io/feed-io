@@ -2,6 +2,9 @@
 
 require __DIR__.DIRECTORY_SEPARATOR.'bootstrap.php';
 
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
 $requests = [
     new FeedIo\Async\Request('https://jsonfeed.org/feed.json'),
     new FeedIo\Async\Request('https://jsonfeed.org/xml/rss.xml'),
@@ -10,7 +13,7 @@ $requests = [
     new FeedIo\Async\Request('https://debril.org/feed/'),
     new FeedIo\Async\Request('https://localhost:8000'),
 ];
-$logger = (new FeedIo\Factory\Builder\MonologBuilder())->getLogger();
+$logger = new Logger('feed-io', [new StreamHandler('php://stdout')]);
 
 $feedIo = new \FeedIo\FeedIo(new \FeedIo\Adapter\Guzzle\Client(new \GuzzleHttp\Client()), $logger);
 
