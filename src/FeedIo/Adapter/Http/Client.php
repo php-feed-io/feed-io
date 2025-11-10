@@ -154,7 +154,10 @@ class Client implements ClientInterface
         // Parse current URL
         $parts = parse_url($currentUrl);
         if (!$parts) {
-            return $location;
+            throw new ServerErrorException(
+                new \Nyholm\Psr7\Response(500, [], 'Invalid URL'),
+                0
+            );
         }
 
         $scheme = $parts['scheme'] ?? 'http';
@@ -174,6 +177,7 @@ class Client implements ClientInterface
         }
 
         $port = isset($parts['port']) ? ':' . $parts['port'] : '';
-        return "{$scheme}://{$host}{$port}{$basePath}/{$location}";
+        $separator = str_ends_with($basePath, '/') ? '' : '/';
+        return "{$scheme}://{$host}{$port}{$basePath}{$separator}{$location}";
     }
 }
