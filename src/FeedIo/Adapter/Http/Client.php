@@ -89,9 +89,10 @@ class Client implements ClientInterface
                     $duration
                 );
             case 303:
-                // 303 See Other always requires GET
+                // 303 See Other: change POST/PUT/DELETE to GET, but preserve HEAD
+                $redirectMethod = $method === 'HEAD' ? 'HEAD' : 'GET';
                 return $this->handleRedirect(
-                    'GET',
+                    $redirectMethod,
                     $url,
                     $psrResponse,
                     $modifiedSince,
@@ -113,7 +114,7 @@ class Client implements ClientInterface
      * @param \Psr\Http\Message\ResponseInterface $psrResponse
      * @param DateTime|null $modifiedSince
      * @param int $redirectCount
-     * @param float $duration
+     * @param float $duration Duration of the redirect request (used for error reporting)
      * @return ResponseInterface
      * @throws ClientExceptionInterface
      */
@@ -143,11 +144,19 @@ class Client implements ClientInterface
      * @param string $currentUrl
      * @param string $location
      * @return string
+     * @throws ServerErrorException
      */
     protected function resolveRedirectUrl(string $currentUrl, string $location): string
     {
-        // If location is already absolute, return it
-        if (preg_match('/^https?:\/\//i', $location)) {
+        // Check if location has a scheme (absolute URL or potentially malicious scheme)
+        if (preg_match('/^([a-z][a-z0-9+.-]*):(?:\/\/)?/i', $location, $matches)) {
+            $scheme = strtolower($matches[1]);
+            if (!in_array($scheme, ['http', 'https'], true)) {
+                throw new ServerErrorException(
+                    new \Nyholm\Psr7\Response(400, [], 'Invalid redirect scheme: ' . $scheme),
+                    0
+                );
+            }
             return $location;
         }
 

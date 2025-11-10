@@ -223,4 +223,86 @@ class ClientTest extends TestCase
             $this->assertGreaterThanOrEqual(0, $e->getDuration());
         }
     }
+
+    public function test303RedirectPreservesHeadMethod(): void
+    {
+        // Directly test that a 303 redirect preserves HEAD method
+        // We'll use reflection to call the protected request() method with HEAD
+        
+        $redirectResponse = new PsrResponse(303, ['Location' => 'https://example.com/new-feed.xml']);
+        $finalResponse = new PsrResponse(200, [], 'content');
+
+        $requestCount = 0;
+        $this->psrClient
+            ->expects($this->exactly(2))
+            ->method('sendRequest')
+            ->willReturnCallback(function (RequestInterface $request) use ($redirectResponse, $finalResponse, &$requestCount) {
+                $requestCount++;
+                
+                if ($requestCount === 1) {
+                    // First request: HEAD
+                    $this->assertEquals('HEAD', $request->getMethod());
+                    return $redirectResponse;
+                }
+                
+                // Second request: should still be HEAD (not changed to GET for 303)
+                $this->assertEquals('HEAD', $request->getMethod());
+                $this->assertEquals('https://example.com/new-feed.xml', (string) $request->getUri());
+                return $finalResponse;
+            });
+
+        // Use reflection to call protected request() method with HEAD
+        $reflection = new \ReflectionClass($this->client);
+        $method = $reflection->getMethod('request');
+        $method->setAccessible(true);
+        
+        $response = $method->invoke($this->client, 'HEAD', 'https://example.com/old-feed.xml', null, 0);
+        
+        $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    /**
+     * @dataProvider maliciousSchemeProvider
+     */
+    public function testRejectsRedirectsWithMaliciousSchemes(string $maliciousUrl): void
+    {
+        $redirectResponse = new PsrResponse(301, ['Location' => $maliciousUrl]);
+
+        $this->psrClient
+            ->expects($this->once())
+            ->method('sendRequest')
+            ->willReturn($redirectResponse);
+
+        $this->expectException(ServerErrorException::class);
+
+        $this->client->getResponse('https://example.com/feed.xml');
+    }
+
+    public static function maliciousSchemeProvider(): array
+    {
+        return [
+            'file scheme' => ['file:///etc/passwd'],
+            'ftp scheme' => ['ftp://malicious.com/data'],
+            'javascript scheme' => ['javascript:alert(1)'],
+            'data scheme' => ['data:text/html,<script>alert(1)</script>'],
+            'mailto scheme' => ['mailto:test@example.com'],
+            'tel scheme' => ['tel:+1234567890'],
+        ];
+    }
+
+    public function testAllowsHttpAndHttpsRedirects(): void
+    {
+        $httpRedirect = new PsrResponse(301, ['Location' => 'http://example.com/feed.xml']);
+        $httpsRedirect = new PsrResponse(301, ['Location' => 'https://secure.example.com/feed.xml']);
+        $finalResponse = new PsrResponse(200, [], 'content');
+
+        $this->psrClient
+            ->expects($this->exactly(3))
+            ->method('sendRequest')
+            ->willReturnOnConsecutiveCalls($httpRedirect, $httpsRedirect, $finalResponse);
+
+        $response = $this->client->getResponse('https://example.com/feed.xml');
+
+        $this->assertEquals(200, $response->getStatusCode());
+    }
 }
