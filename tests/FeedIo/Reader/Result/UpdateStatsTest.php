@@ -426,6 +426,57 @@ class UpdateStatsTest extends TestCase
         $this->assertGreaterThanOrEqual(0, $average);
     }
 
+    /**
+     * Test that getAverageInterval and getMedianInterval don't mutate $this->intervals
+     * This ensures calling these methods doesn't have side effects on other methods
+     */
+    public function testIntervalMethodsDoNotMutateState()
+    {
+        $feed = new Feed();
+        $feed->setLastModified(new \DateTime('-1 day'));
+        
+        $dates = [
+            '-5 days',
+            '-1 day',
+            '-3 days',
+            '-2 days',
+            '-4 days',
+        ];
+        
+        foreach ($dates as $date) {
+            $item = new Feed\Item();
+            $item->setLastModified(new \DateTime($date));
+            $feed->add($item);
+        }
+
+        $stats = new UpdateStats($feed);
+        
+        // Get the original intervals (should be in chronological order based on how they're computed)
+        $originalIntervals = $stats->getIntervals();
+        
+        // Call methods that need to sort the intervals
+        $average = $stats->getAverageInterval();
+        $median = $stats->getMedianInterval();
+        
+        // Get intervals again - they should still be in the original order
+        $intervalsAfter = $stats->getIntervals();
+        
+        $this->assertEquals($originalIntervals, $intervalsAfter, 
+            'Calling getAverageInterval() and getMedianInterval() should not mutate the intervals array');
+        
+        // Call again to verify no mutation on subsequent calls
+        $average2 = $stats->getAverageInterval();
+        $median2 = $stats->getMedianInterval();
+        $intervalsAfter2 = $stats->getIntervals();
+        
+        $this->assertEquals($originalIntervals, $intervalsAfter2,
+            'Multiple calls to statistical methods should not mutate the intervals array');
+        
+        // Results should be consistent
+        $this->assertEquals($average, $average2);
+        $this->assertEquals($median, $median2);
+    }
+
     private function getDates(): array
     {
         return [
