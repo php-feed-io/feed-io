@@ -340,6 +340,92 @@ class UpdateStatsTest extends TestCase
         }
     }
 
+    /**
+     * Test that average is calculated using filtered count, not original count
+     * This ensures the average is based only on non-outlier values
+     */
+    public function testAverageIntervalUsesFilteredCount()
+    {
+        $feed = new Feed();
+        $feed->setLastModified(new \DateTime('-1 day'));
+        
+        // Create a dataset with clear outliers
+        // Regular intervals: ~1 day (86400 seconds)
+        // Outlier: ~100 days (8640000 seconds)
+        $dates = [
+            '-1 day',    // Most recent
+            '-2 days',   // 1 day interval
+            '-3 days',   // 1 day interval
+            '-4 days',   // 1 day interval
+            '-5 days',   // 1 day interval
+            '-105 days', // 100 day interval (OUTLIER - should be filtered out)
+        ];
+        
+        foreach ($dates as $date) {
+            $item = new Feed\Item();
+            $item->setLastModified(new \DateTime($date));
+            $feed->add($item);
+        }
+
+        $stats = new UpdateStats($feed);
+        $intervals = $stats->getIntervals();
+        
+        // We should have 5 intervals total
+        $this->assertCount(5, $intervals);
+        
+        // Get the average
+        $average = $stats->getAverageInterval();
+        
+        // The average should be close to 86400 (1 day)
+        // If it was incorrectly dividing by the original count (5),
+        // it would be much lower because it would include the large outlier
+        // in the sum but divide by all 5 values.
+        
+        // With outlier filtering:
+        // - Filtered values: [86400, 86400, 86400, 86400] (4 values)
+        // - Sum: 345600
+        // - Average: 345600 / 4 = 86400
+        
+        // Without correct filtering (old bug):
+        // - Sum of filtered: 345600
+        // - Divided by original count: 345600 / 5 = 69120 (WRONG!)
+        
+        $this->assertEquals(86400, $average, 'Average should be 86400 (1 day) when calculated with filtered count');
+        
+        // Verify it's not the incorrect value
+        $this->assertNotEquals(69120, $average, 'Average should not use original count as divisor');
+    }
+
+    /**
+     * Test average calculation with all values filtered out
+     * Edge case: what if IQR filtering removes everything?
+     */
+    public function testAverageIntervalWhenAllValuesFiltered()
+    {
+        $feed = new Feed();
+        $feed->setLastModified(new \DateTime('-1 day'));
+        
+        // Create items that might all be considered outliers
+        // This is a pathological case but we should handle it gracefully
+        $dates = [
+            '-1 day',
+            '-2 days',
+        ];
+        
+        foreach ($dates as $date) {
+            $item = new Feed\Item();
+            $item->setLastModified(new \DateTime($date));
+            $feed->add($item);
+        }
+
+        $stats = new UpdateStats($feed);
+        
+        // Should return 0 if no values pass the filter, not crash
+        $average = $stats->getAverageInterval();
+        $this->assertIsInt($average);
+        $this->assertGreaterThanOrEqual(0, $average);
+    }
+
     private function getDates(): array
     {
         return [
