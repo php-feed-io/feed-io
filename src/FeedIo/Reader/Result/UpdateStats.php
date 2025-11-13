@@ -142,8 +142,8 @@ class UpdateStats
 
         // some feeds could have very old historic
         // articles so eliminate them with statistic
-        $q1 = $this->intervals[floor($count * 0.25)];
-        $q3 = $this->intervals[floor($count * 0.75)];
+        $q1 = $this->intervals[(int) floor($count * 0.25)];
+        $q3 = $this->intervals[(int) floor($count * 0.75)];
         $iqr = $q3 - $q1;
 
         $lower_bound = $q1 - 1.5 * $iqr;
@@ -170,7 +170,7 @@ class UpdateStats
             return 0;
         }
 
-        $num = floor($count / 2);
+        $num = (int) floor($count / 2);
 
         if ($count % 2 === 0) {
             return intval(floor(($this->intervals[$num - 1] + $this->intervals[$num]) / 2));
