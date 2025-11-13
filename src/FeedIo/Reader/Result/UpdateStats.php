@@ -142,7 +142,7 @@ class UpdateStats
         }
 
         // some feeds could have very old historic
-        // articles so eliminate them with statistic
+        // articles so eliminate them using statistical methods
         $q1 = $intervals[(int) floor($count * 0.25)];
         $q3 = $intervals[(int) floor($count * 0.75)];
         $iqr = $q3 - $q1;
@@ -150,7 +150,7 @@ class UpdateStats
         $lower_bound = $q1 - 1.5 * $iqr;
         $upper_bound = $q3 + 1.5 * $iqr;
 
-        $result = array_filter($intervals, function($value) use ($lower_bound, $upper_bound) {
+        $result = array_filter($intervals, function(int $value) use ($lower_bound, $upper_bound) {
             return $value >= $lower_bound && $value <= $upper_bound;
         });
 
@@ -182,7 +182,11 @@ class UpdateStats
     }
 
     /**
-     * @return int
+     * Returns the timestamp of the newest item in the feed.
+     * The value is capped at the current time to prevent future dates from being used.
+     * If the feed has no items with valid timestamps, returns the feed's last modified timestamp.
+     * 
+     * @return int Unix timestamp of the newest item (in seconds since epoch)
      */
     public function getNewestItemDate(): int
     {
