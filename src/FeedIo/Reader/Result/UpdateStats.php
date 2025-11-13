@@ -155,7 +155,7 @@ class UpdateStats
 
         $total = array_sum($result);
 
-        return count($this->intervals) ? intval(floor($total / count($this->intervals))) : 0;
+        return count($result) ? intval(floor($total / count($result))) : 0;
     }
 
     /**
