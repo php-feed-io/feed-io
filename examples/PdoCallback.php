@@ -90,7 +90,10 @@ class PdoCallback implements \FeedIo\Async\CallbackInterface
 
 }
 
-$logger = (new FeedIo\Factory\Builder\MonologBuilder())->getLogger();
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
+$logger = new Logger('feed-io', [new StreamHandler('php://stdout')]);
 $pdo = new PDO('sqlite:memory:');
 $callback = new PdoCallback($pdo, $logger);
 

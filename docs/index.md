@@ -6,9 +6,10 @@
 <?php
 require 'vendor/autoload.php';
 
-use \FeedIo\Factory;
+// create a simple FeedIo instance, e.g. with the Symfony HTTP Client
+$client = new \FeedIo\Adapter\Http\Client(new Symfony\Component\HttpClient\HttplugClient());
+$feedIo = new \FeedIo\FeedIo($client);
 
-$feedIo = Factory::create()->getFeedIo();
 $result = $feedIo->read('http://php.net/feed.atom');
 
 echo "feed title : {$result->getFeed()->getTitle()} \n";
@@ -54,8 +55,9 @@ feed-io is designed to read feeds across the internet and to publish your own. I
 
 ```php
 <?php
-// create a simple FeedIo instance
-$feedIo = \FeedIo\Factory::create()->getFeedIo();
+// create a simple FeedIo instance, e.g. with the Symfony HTTP Client
+$client = new \FeedIo\Adapter\Http\Client(new Symfony\Component\HttpClient\HttplugClient());
+$feedIo = new \FeedIo\FeedIo($client);
 
 // read a feed
 $result = $feedIo->read($url);
@@ -124,14 +126,18 @@ $feed->add($item);
 
 ## Activate logging
 
-feed-io natively supports PSR-3 logging, you can activate it by choosing a 'builder' in the factory :
+feed-io natively supports PSR-3 logging, you can activate it by injecting a logger when creating the FeedIo instance :
 
 ```php
-$feedIo = \FeedIo\Factory::create(['builder' => 'monolog'])->getFeedIo();
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
+$client = new \FeedIo\Adapter\Http\Client(new Symfony\Component\HttpClient\HttplugClient());
+$logger = new Logger('feed-io', [new StreamHandler('php://stdout')]);
+$feedIo = new \FeedIo\FeedIo($client, $logger);
 ```
 
-feed-io only provides a builder to create Monolog\Logger instances. You can write your own, as long as the Builder implements BuilderInterface.
-Building a FeedIo instance without the factory
+## Building a FeedIo instance
 
 To create a new FeedIo instance you only need to inject two dependencies :
 
