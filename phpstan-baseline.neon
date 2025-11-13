@@ -1,12 +1,6 @@
 parameters:
 	ignoreErrors:
 		-
-			message: '#^Offset float on list in isset\(\) does not exist\.$#'
-			identifier: isset.offset
-			count: 1
-			path: src/FeedIo/Reader/Result/UpdateStats.php
-
-		-
 			message: '#^PHPDoc tag @var with type FeedIo\\Reader\\FixerAbstract is not subtype of native type FeedIo\\Reader\\Fixer\\HttpLastModified\|FeedIo\\Reader\\Fixer\\PublicId\.$#'
 			identifier: varTag.nativeType
 			count: 1
