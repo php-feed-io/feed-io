@@ -19,7 +19,7 @@ $feed->setLink('https://example.com');
 $feed->setTitle('feed-io example feed');
 $feed->setDescription('my greate feed');
 
-// The item instance SHOULD be instanciated by the feed
+// The item instance SHOULD be instantiated by the feed
 $item = $feed->newItem();
 
 $item->setTitle('a title');
