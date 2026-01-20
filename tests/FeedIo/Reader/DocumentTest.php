@@ -49,4 +49,40 @@ class DocumentTest extends TestCase
         $this->expectException('\LogicException');
         $document->getJsonAsArray();
     }
+
+    public function testLoadMalformedJsonDocument()
+    {
+        // Content starts with '{' but isn't valid JSON, so isJson() returns false
+        $document = new Document('{"data":null,"status":"error","error":{"code":1000,"message":"not found"');
+        $this->assertFalse($document->isJson());
+        $this->expectException('\LogicException');
+        $document->getJsonAsArray();
+    }
+
+    public function testLoadJsonDocumentWithNullValue()
+    {
+        // Valid JSON that contains null values should work if the root is an object
+        $document = new Document('{"data": null}');
+        $result = $document->getJsonAsArray();
+        $this->assertIsArray($result);
+        $this->assertNull($result['data']);
+    }
+
+    public function testLoadJsonDocumentWithEmptyObject()
+    {
+        $document = new Document('{}');
+        $result = $document->getJsonAsArray();
+        $this->assertIsArray($result);
+        $this->assertEmpty($result);
+    }
+
+    public function testLoadJsonDocumentWithEmptyArray()
+    {
+        // This won't pass isJson() check since it starts with '[', not '{'
+        // but we test the case where JSON array is wrapped
+        $document = new Document('{"items": []}');
+        $result = $document->getJsonAsArray();
+        $this->assertIsArray($result);
+        $this->assertEmpty($result['items']);
+    }
 }

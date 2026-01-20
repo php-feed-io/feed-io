@@ -28,7 +28,15 @@ class Document
 
     public function isJson(): bool
     {
-        return $this->startWith('{') && json_validate($this->content);
+        if (! $this->startWith('{') && ! $this->startWith('[')) {
+            return false;
+        }
+        try {
+            json_decode($this->content, false, 512, JSON_THROW_ON_ERROR);
+            return true;
+        } catch (\JsonException $e) {
+            return false;
+        }
     }
 
     public function isXml(): bool
@@ -66,7 +74,7 @@ class Document
          * @param string $errno
          */
             function ($errno, $errstr) {
-                throw new \InvalidArgumentException("malformed xml string. parsing error : $errstr ($errno)");
+                throw new \InvalidArgumentException("malformed xml string. parsing error: $errstr ($errno)");
             }
         );
 
@@ -86,6 +94,20 @@ class Document
             throw new \LogicException('this document is not a JSON stream');
         }
 
-        return json_decode($this->content, true);
+        try {
+            $result = json_decode($this->content, true, 512, JSON_THROW_ON_ERROR);
+        } catch (\JsonException $e) {
+            throw new \InvalidArgumentException(
+                'malformed JSON string. parsing error: ' . $e->getMessage()
+            );
+        }
+
+        if (! is_array($result)) {
+            throw new \InvalidArgumentException(
+                'JSON content must decode to an array or object, got: ' . gettype($result)
+            );
+        }
+
+        return $result;
     }
 }
