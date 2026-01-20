@@ -28,7 +28,7 @@ class Document
 
     public function isJson(): bool
     {
-        return $this->startWith('{');
+        return $this->startWith('{') && json_validate($this->content);
     }
 
     public function isXml(): bool
