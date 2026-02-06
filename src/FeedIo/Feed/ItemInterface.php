@@ -52,7 +52,7 @@ interface ItemInterface extends NodeInterface
     public function newMedia(): MediaInterface;
 
     /**
-     * removes $media from the object's attributes
+     * Removes $media from the medias collection.
      *
      * @param  MediaInterface $media
      * @return ItemInterface
