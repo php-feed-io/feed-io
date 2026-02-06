@@ -213,7 +213,7 @@ class ItemTest extends TestCase
 
         $this->assertEquals(2, $this->object->getMedias()->count());
 
-        // Remove all medias one by one
+        // Remove all media one by one
         $this->object->removeMedia($media1);
         $this->object->removeMedia($media2);
 
