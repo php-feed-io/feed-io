@@ -155,6 +155,72 @@ class ItemTest extends TestCase
         $this->assertEquals(1, $count);
     }
 
+    public function testRemoveMedia()
+    {
+        $media1 = new Media();
+        $media1->setUrl('http://example.org/media1.mp3');
+        
+        $media2 = new Media();
+        $media2->setUrl('http://example.org/media2.mp3');
+        
+        $media3 = new Media();
+        $media3->setUrl('http://example.org/media3.mp3');
+
+        $this->object->addMedia($media1);
+        $this->object->addMedia($media2);
+        $this->object->addMedia($media3);
+
+        $this->assertEquals(3, $this->object->getMedias()->count());
+
+        // Remove the middle media
+        $this->object->removeMedia($media2);
+
+        $this->assertEquals(2, $this->object->getMedias()->count());
+        
+        $remainingMedias = iterator_to_array($this->object->getMedias());
+        $this->assertSame($media1, $remainingMedias[0]);
+        $this->assertSame($media3, $remainingMedias[2]);
+    }
+
+    public function testRemoveMediaNotPresent()
+    {
+        $media1 = new Media();
+        $media1->setUrl('http://example.org/media1.mp3');
+        
+        $media2 = new Media();
+        $media2->setUrl('http://example.org/media2.mp3');
+
+        $this->object->addMedia($media1);
+
+        $this->assertEquals(1, $this->object->getMedias()->count());
+
+        // Removing a media that was never added should not affect the collection
+        $this->object->removeMedia($media2);
+
+        $this->assertEquals(1, $this->object->getMedias()->count());
+    }
+
+    public function testRemoveAllMedias()
+    {
+        $media1 = new Media();
+        $media1->setUrl('http://example.org/media1.mp3');
+        
+        $media2 = new Media();
+        $media2->setUrl('http://example.org/media2.mp3');
+
+        $this->object->addMedia($media1);
+        $this->object->addMedia($media2);
+
+        $this->assertEquals(2, $this->object->getMedias()->count());
+
+        // Remove all medias one by one
+        $this->object->removeMedia($media1);
+        $this->object->removeMedia($media2);
+
+        $this->assertEquals(0, $this->object->getMedias()->count());
+        $this->assertFalse($this->object->hasMedia());
+    }
+
     public function testSetAuthor()
     {
         $author = new Author();
