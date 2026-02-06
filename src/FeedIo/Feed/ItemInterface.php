@@ -52,6 +52,14 @@ interface ItemInterface extends NodeInterface
     public function newMedia(): MediaInterface;
 
     /**
+     * removes $media from the object's attributes
+     *
+     * @param  MediaInterface $media
+     * @return ItemInterface
+     */
+    public function removeMedia(MediaInterface $media): ItemInterface;
+
+    /**
      * Returns the item's summary. Valid for JSONFeed and Atom formats only
      *
      * @return string|null

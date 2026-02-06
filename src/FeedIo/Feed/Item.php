@@ -59,6 +59,22 @@ class Item extends Node implements ItemInterface
     }
 
     /**
+     * @param  MediaInterface $media
+     * @return ItemInterface
+     */
+    public function removeMedia(MediaInterface $media): ItemInterface
+    {
+        foreach ($this->medias as $key => $existingMedia) {
+            if ($existingMedia === $media) {
+                $this->medias->offsetUnset($key);
+                break;
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * @return string|null
      */
     public function getSummary(): ?string
