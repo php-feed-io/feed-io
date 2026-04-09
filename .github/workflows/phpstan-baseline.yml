@@ -6,6 +6,8 @@ on:
     paths:
       - 'src/**/*.php'
 
+permissions: {}
+
 jobs:
   phpstan:
     runs-on: ubuntu-latest
@@ -14,6 +16,8 @@ jobs:
       matrix:
         php-version: ['8.4']
       fail-fast: false
+    permissions: 
+      contents: read
 
     steps:
       - name: Checkout repository
