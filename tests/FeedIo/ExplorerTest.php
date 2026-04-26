@@ -46,8 +46,8 @@ class ExplorerTest extends TestCase
         $html = file_get_contents(dirname(__FILE__) . $htmlPath);
         $client = $this->createMock('FeedIo\Adapter\ClientInterface');
         $response = $this->createMock('FeedIo\Adapter\ResponseInterface');
-        $response->expects($this->any())->method('getBody')->will($this->returnValue($html));
-        $client->expects($this->any())->method('getResponse')->will($this->returnValue($response));
+        $response->expects($this->any())->method('getBody')->willReturn($html);
+        $client->expects($this->any())->method('getResponse')->willReturn($response);
 
         return $client;
     }

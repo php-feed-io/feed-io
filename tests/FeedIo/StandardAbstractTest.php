@@ -29,10 +29,10 @@ class StandardAbstractTest extends TestCase
             '\FeedIo\Standard\XmlAbstract',
             array($date)
         );
-        $this->object->expects($this->any())->method('canHandle')->will($this->returnValue(true));
-        $this->object->expects($this->any())->method('buildFeedRuleSet')->will($this->returnValue(new RuleSet()));
-        $this->object->expects($this->any())->method('buildItemRuleSet')->will($this->returnValue(new RuleSet()));
-        $this->object->expects($this->any())->method('getMainElement')->will($this->returnValue(new \DOMElement('test')));
+        $this->object->expects($this->any())->method('canHandle')->willReturn(true);
+        $this->object->expects($this->any())->method('buildFeedRuleSet')->willReturn(new RuleSet());
+        $this->object->expects($this->any())->method('buildItemRuleSet')->willReturn(new RuleSet());
+        $this->object->expects($this->any())->method('getMainElement')->willReturn(new \DOMElement('test'));
     }
 
     public function testGetItemNodeName()

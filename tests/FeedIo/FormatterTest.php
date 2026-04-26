@@ -33,21 +33,21 @@ class FormatterTest extends TestCase
         $standard = $this->getMockForAbstractClass(
             '\FeedIo\Standard\XmlAbstract',
             array(new DateTimeBuilder()),
-            'StandardMock',
+            '',
             true,
             true,
             true,
             ['format', 'getMainElement', 'setHeaders', 'buildFeedRuleSet', 'buildItemRuleSet']
         );
-        $standard->expects($this->any())->method('format')->will($this->returnValue(
+        $standard->expects($this->any())->method('format')->willReturn(
             $document
-        ));
-        $standard->expects($this->any())->method('getMainElement')->will($this->returnValue(
+        );
+        $standard->expects($this->any())->method('getMainElement')->willReturn(
             $document->documentElement->firstChild
-        ));
-        $standard->expects($this->any())->method('setHeaders')->will($this->returnSelf());
-        $standard->expects($this->any())->method('buildFeedRuleSet')->will($this->returnValue($ruleSet));
-        $standard->expects($this->any())->method('buildItemRuleSet')->will($this->returnValue($ruleSet));
+        );
+        $standard->expects($this->any())->method('setHeaders')->willReturnSelf();
+        $standard->expects($this->any())->method('buildFeedRuleSet')->willReturn($ruleSet);
+        $standard->expects($this->any())->method('buildItemRuleSet')->willReturn($ruleSet);
 
         $this->object = new XmlFormatter($standard);
     }

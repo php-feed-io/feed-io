@@ -33,15 +33,15 @@ class ParserTest extends TestCase
         $standard = $this->getMockForAbstractClass(
             '\FeedIo\StandardAbstract',
             array($date),
-            'StandardMock',
+            '',
             true,
             true,
             true,
             ['canHandle', 'getMainElement', 'buildFeedRuleSet']
         );
-        $standard->expects($this->any())->method('canHandle')->will($this->returnValue(true));
-        $standard->expects($this->any())->method('buildFeedRuleSet')->will($this->returnValue(new RuleSet()));
-        $standard->expects($this->any())->method('getMainElement')->will($this->returnValue(new \DOMElement('test')));
+        $standard->expects($this->any())->method('canHandle')->willReturn(true);
+        $standard->expects($this->any())->method('buildFeedRuleSet')->willReturn(new RuleSet());
+        $standard->expects($this->any())->method('getMainElement')->willReturn(new \DOMElement('test'));
 
         $this->object = new Parser($standard, new NullLogger());
     }
@@ -88,7 +88,7 @@ XML;
             '\FeedIo\StandardAbstract',
             array(new DateTimeBuilder())
         );
-        $standard->expects($this->any())->method('canHandle')->will($this->returnValue(false));
+        $standard->expects($this->any())->method('canHandle')->willReturn(false);
         $parser = new Parser($standard, new NullLogger());
 
         $this->expectException('\FeedIo\Parser\UnsupportedFormatException');

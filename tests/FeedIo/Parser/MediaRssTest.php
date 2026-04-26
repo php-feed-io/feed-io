@@ -23,6 +23,8 @@ class MediaRssTest extends TestCase
 {
     public const SAMPLE_FILE = 'rss/sample-youtube.xml';
 
+    protected Parser $object;
+
     /**
      * @return \FeedIo\StandardAbstract
      */
