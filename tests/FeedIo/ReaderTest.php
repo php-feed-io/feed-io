@@ -40,8 +40,8 @@ class ReaderTest extends TestCase
     {
         $client = $this->createMock('FeedIo\Adapter\ClientInterface');
         $response = $this->createMock('FeedIo\Adapter\ResponseInterface');
-        $response->expects($this->any())->method('getBody')->will($this->returnValue('<rss></rss>'));
-        $client->expects($this->any())->method('getResponse')->will($this->returnValue($response));
+        $response->expects($this->any())->method('getBody')->willReturn('<rss></rss>');
+        $client->expects($this->any())->method('getResponse')->willReturn($response);
 
         return $client;
     }
@@ -53,8 +53,8 @@ class ReaderTest extends TestCase
     {
         $response = $this->createMock('Psr\Http\Message\ResponseInterface');
         $client = $this->createMock('FeedIo\Adapter\ClientInterface');
-        $client->expects($this->any())->method('getResponse')->will(
-            $this->throwException(new ServerErrorException($response, 0))
+        $client->expects($this->any())->method('getResponse')->willThrowException(
+            new ServerErrorException($response, 0)
         );
 
         return $client;
@@ -69,15 +69,15 @@ class ReaderTest extends TestCase
             '\FeedIo\Standard\XmlAbstract',
             array(new DateTimeBuilder())
         );
-        $standard->expects($this->any())->method('canHandle')->will($this->returnValue(true));
-        $standard->expects($this->any())->method('buildFeedRuleSet')->will($this->returnValue(new RuleSet()));
-        $standard->expects($this->any())->method('buildItemRuleSet')->will($this->returnValue(new RuleSet()));
+        $standard->expects($this->any())->method('canHandle')->willReturn(true);
+        $standard->expects($this->any())->method('buildFeedRuleSet')->willReturn(new RuleSet());
+        $standard->expects($this->any())->method('buildItemRuleSet')->willReturn(new RuleSet());
         $file = dirname(__FILE__)."/../samples/rss/sample-rss.xml";
         $domDocument = new \DOMDocument();
         $domDocument->load($file, LIBXML_NOBLANKS | LIBXML_COMPACT);
-        $standard->expects($this->any())->method('getMainElement')->will($this->returnValue(
+        $standard->expects($this->any())->method('getMainElement')->willReturn(
             $domDocument->documentElement->getElementsByTagName('channel')->item(0)
-        ));
+        );
 
         $parser = new XmlParser($standard, new NullLogger());
 
@@ -149,21 +149,21 @@ class ReaderTest extends TestCase
             '\FeedIo\Standard\XmlAbstract',
             [new DateTimeBuilder()]
         );
-        $standard->expects($this->any())->method('canHandle')->will($this->returnValue(true));
+        $standard->expects($this->any())->method('canHandle')->willReturn(true);
 
         $parser = $this->getMockForAbstractClass(
             '\FeedIo\ParserAbstract',
             [$standard, new NullLogger()]
         );
 
-        $parser->expects($this->once())->method('checkBodyStructure')->will($this->returnValue(true));
-        $parser->expects($this->once())->method('parseContent')->will($this->returnValue($feed));
+        $parser->expects($this->once())->method('checkBodyStructure')->willReturn(true);
+        $parser->expects($this->once())->method('parseContent')->willReturn($feed);
 
         $this->object->addParser($parser);
 
         $response = $this->getMockForAbstractClass('\FeedIo\Adapter\ResponseInterface');
-        $response->expects($this->once())->method('isModified')->will($this->returnValue(true));
-        $response->expects($this->any())->method('getBody')->will($this->returnValue(''));
+        $response->expects($this->once())->method('isModified')->willReturn(true);
+        $response->expects($this->any())->method('getBody')->willReturn('');
 
         $this->object->handleResponse($response, $feed);
     }
@@ -173,8 +173,8 @@ class ReaderTest extends TestCase
         $feed = new Feed();
 
         $response = $this->getMockForAbstractClass('\FeedIo\Adapter\ResponseInterface');
-        $response->expects($this->once())->method('isModified')->will($this->returnValue(false));
-        $response->expects($this->any())->method('getBody')->will($this->returnValue(''));
+        $response->expects($this->once())->method('isModified')->willReturn(false);
+        $response->expects($this->any())->method('getBody')->willReturn('');
 
         $this->object->handleResponse($response, $feed);
     }
