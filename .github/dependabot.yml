@@ -11,6 +11,10 @@ updates:
     schedule:
       interval: "daily"
     versioning-strategy: increase
+    labels:
+      - dependencies
+      - skip-changelog
+      - php
     cooldown:
       default-days: 7
 
@@ -19,5 +23,9 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+    labels:
+      - dependencies
+      - skip-changelog
+      - github_actions
     cooldown:
       default-days: 7
