@@ -254,7 +254,6 @@ class ClientTest extends TestCase
         // Use reflection to call protected request() method with HEAD
         $reflection = new \ReflectionClass($this->client);
         $method = $reflection->getMethod('request');
-        $method->setAccessible(true);
         
         $response = $method->invoke($this->client, 'HEAD', 'https://example.com/old-feed.xml', null, 0);
         
