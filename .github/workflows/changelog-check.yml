@@ -1,0 +1,23 @@
+name: Changelog Check
+
+on:
+  pull_request:
+    branches: [ main ]
+    types: [ opened, synchronize, reopened, ready_for_review, labeled, unlabeled ]
+
+permissions: {}
+
+jobs:
+  changelog:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+
+    steps:
+      - name: Ensure changelog is updated or explicitly skipped
+        uses: dangoslen/changelog-enforcer@204e7d3ef26579f4cd0fd759c57032656fdf23c7 # v3.6.1
+        with:
+          changeLogPath: CHANGELOG.md
+          skipLabels: skip-changelog
+          missingUpdateErrorMessage: "Pull requests must update CHANGELOG.md, or use the skip-changelog label to bypass this check."
