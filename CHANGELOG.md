@@ -8,8 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- Add removeMedia() method to ItemInterface (#35)
 
 ### Fixed
+- fix: handle invalid JSON in loadJsonAsArray to prevent TypeError (#33)
 
 ## Released
 ## [v6.2.0] - 2025-11-13
