@@ -28,7 +28,7 @@ class LogoTest extends TestCase
         $this->object = new Logo();
     }
 
-    protected function appendNonEmptyChild(\DomDocument $document, \DOMElement $element, string $name, string $value = null): void
+    protected function appendNonEmptyChild(\DomDocument $document, \DOMElement $element, string $name, ?string $value = null): void
     {
         if (! is_null($value)) {
             $element->appendChild($document->createElement($name, $value));

@@ -1,7 +1,7 @@
 all: clean coverage
 
 test: 
-	vendor/bin/phpunit 
+	vendor/bin/phpunit --display-deprecations
 
 test-live-feeds:
 	vendor/bin/phpunit -c phpunit-feeds.xml

@@ -66,7 +66,6 @@ class StandardAbstractTest extends TestCase
     {
         $reflection = new \ReflectionClass(get_class($this->object));
         $method = $reflection->getMethod('buildBaseRuleSet');
-        $method->setAccessible(true);
 
         $ruleSet = $method->invoke($this->object);
         $this->assertInstanceOf('\FeedIo\RuleSet', $ruleSet);
