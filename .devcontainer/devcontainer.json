@@ -1,10 +1,11 @@
 {
   "name": "PHP Feed-IO",
-  "build": {
-    "dockerfile": "Dockerfile",
-    "args": {
-      "VARIANT": "8.1"
-    }
+  "image": "mcr.microsoft.com/devcontainers/php:8.5",
+  "mounts": [
+    "source=${localWorkspaceFolder}/.devcontainer/php.ini,target=/usr/local/etc/php/conf.d/php-custom.ini,type=bind,consistency=cached"
+  ],
+  "containerEnv": {
+    "XDEBUG_MODE": "off"
   },
   "customizations": {
     "vscode": {
