@@ -129,4 +129,79 @@ class FeedTest extends TestCase
 
         $this->assertCount(2, $this->object);
     }
+
+    public function testAddLink()
+    {
+        $feed = new Feed();
+        $feed->addLink('alternate', 'https://example.com/', 'text/html');
+        $feed->addLink('self', 'https://example.com/feed.atom', 'application/atom+xml');
+
+        $links = iterator_to_array($feed->getLinks());
+        $this->assertCount(2, $links);
+        $this->assertEquals('alternate', $links[0]->getRel());
+        $this->assertEquals('https://example.com/', $links[0]->getHref());
+        $this->assertEquals('text/html', $links[0]->getType());
+        $this->assertEquals('self', $links[1]->getRel());
+        $this->assertEquals('https://example.com/feed.atom', $links[1]->getHref());
+        $this->assertEquals('application/atom+xml', $links[1]->getType());
+    }
+
+    public function testAddLinkWithoutType()
+    {
+        $feed = new Feed();
+        $feed->addLink('self', 'https://example.com/feed.atom');
+
+        $links = iterator_to_array($feed->getLinks());
+        $this->assertCount(1, $links);
+        $this->assertNull($links[0]->getType());
+    }
+
+    public function testGetLinksIsEmptyByDefault()
+    {
+        $feed = new Feed();
+        $links = iterator_to_array($feed->getLinks());
+        $this->assertCount(0, $links);
+    }
+
+    public function testSetHomePageUrl()
+    {
+        $feed = new Feed();
+        $feed->setHomePageUrl('https://example.com/');
+
+        $this->assertEquals('https://example.com/', $feed->getHomePageUrl());
+        $this->assertEquals('https://example.com/', $feed->getLink());
+
+        $links = iterator_to_array($feed->getLinks());
+        $this->assertCount(1, $links);
+        $this->assertEquals('alternate', $links[0]->getRel());
+        $this->assertEquals('https://example.com/', $links[0]->getHref());
+        $this->assertEquals('text/html', $links[0]->getType());
+    }
+
+    public function testSetFeedUrl()
+    {
+        $feed = new Feed();
+        $feed->setFeedUrl('https://example.com/feed.atom');
+
+        $this->assertEquals('https://example.com/feed.atom', $feed->getFeedUrl());
+        $this->assertEquals('https://example.com/feed.atom', $feed->getUrl());
+
+        $links = iterator_to_array($feed->getLinks());
+        $this->assertCount(1, $links);
+        $this->assertEquals('self', $links[0]->getRel());
+        $this->assertEquals('https://example.com/feed.atom', $links[0]->getHref());
+        $this->assertEquals('application/atom+xml', $links[0]->getType());
+    }
+
+    public function testSetHomePageUrlAndSetFeedUrl()
+    {
+        $feed = new Feed();
+        $feed->setHomePageUrl('https://example.com/');
+        $feed->setFeedUrl('https://example.com/feed.atom');
+
+        $links = iterator_to_array($feed->getLinks());
+        $this->assertCount(2, $links);
+        $this->assertEquals('alternate', $links[0]->getRel());
+        $this->assertEquals('self', $links[1]->getRel());
+    }
 }
