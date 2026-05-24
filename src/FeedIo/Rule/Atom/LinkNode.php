@@ -57,7 +57,7 @@ class LinkNode extends RuleAbstract
 
     protected function hasFeedLinks(FeedInterface $feed): bool
     {
-        foreach ($feed->getLinks() as $_) {
+        foreach ($feed->getLinks() as $link) {
             return true;
         }
 
