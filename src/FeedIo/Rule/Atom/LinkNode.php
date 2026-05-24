@@ -8,6 +8,7 @@ use DomDocument;
 use DOMElement;
 use FeedIo\Feed\ItemInterface;
 use FeedIo\Feed\NodeInterface;
+use FeedIo\FeedInterface;
 use FeedIo\RuleAbstract;
 use FeedIo\RuleSet;
 
@@ -46,6 +47,33 @@ class LinkNode extends RuleAbstract
             $this->ruleSet->get('media')->apply($document, $rootElement, $node);
         }
 
+        if ($node instanceof FeedInterface && $this->hasFeedLinks($node)) {
+            $this->addFeedLinks($document, $rootElement, $node);
+            return;
+        }
+
         $this->ruleSet->getDefault()->apply($document, $rootElement, $node);
+    }
+
+    protected function hasFeedLinks(FeedInterface $feed): bool
+    {
+        foreach ($feed->getLinks() as $_) {
+            return true;
+        }
+
+        return false;
+    }
+
+    protected function addFeedLinks(DomDocument $document, DOMElement $rootElement, FeedInterface $feed): void
+    {
+        foreach ($feed->getLinks() as $feedLink) {
+            $element = $document->createElement(static::NODE_NAME);
+            $element->setAttribute('rel', $feedLink->getRel());
+            $element->setAttribute('href', $feedLink->getHref());
+            if ($feedLink->getType() !== null) {
+                $element->setAttribute('type', $feedLink->getType());
+            }
+            $rootElement->appendChild($element);
+        }
     }
 }

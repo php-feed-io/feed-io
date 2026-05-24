@@ -81,4 +81,80 @@ class LinkNodeTest extends TestCase
             $document->saveXML()
         );
     }
+
+    public function testCreateElementForFeedWithLinks()
+    {
+        $feed = new \FeedIo\Feed();
+        $feed->addLink('alternate', 'https://example.com/', 'text/html');
+        $feed->addLink('self', 'https://example.com/feed.atom', 'application/atom+xml');
+
+        $document = new \DOMDocument();
+        $rootElement = $document->createElement('feed');
+        $this->object->apply($document, $rootElement, $feed);
+
+        $document->appendChild($rootElement);
+
+        $this->assertXmlStringEqualsXmlString(
+            '<feed>'
+            . '<link rel="alternate" href="https://example.com/" type="text/html"/>'
+            . '<link rel="self" href="https://example.com/feed.atom" type="application/atom+xml"/>'
+            . '</feed>',
+            $document->saveXML()
+        );
+    }
+
+    public function testCreateElementForFeedWithLinksNoType()
+    {
+        $feed = new \FeedIo\Feed();
+        $feed->addLink('self', 'https://example.com/feed.atom');
+
+        $document = new \DOMDocument();
+        $rootElement = $document->createElement('feed');
+        $this->object->apply($document, $rootElement, $feed);
+
+        $document->appendChild($rootElement);
+
+        $this->assertXmlStringEqualsXmlString(
+            '<feed><link rel="self" href="https://example.com/feed.atom"/></feed>',
+            $document->saveXML()
+        );
+    }
+
+    public function testFeedWithoutLinksCollectionFallsBackToDefault()
+    {
+        $feed = new \FeedIo\Feed();
+        $feed->setLink(self::LINK);
+
+        $document = new \DOMDocument();
+        $rootElement = $document->createElement('feed');
+        $this->object->apply($document, $rootElement, $feed);
+
+        $document->appendChild($rootElement);
+
+        $this->assertXmlStringEqualsXmlString(
+            '<feed><link href="http://localhost"/></feed>',
+            $document->saveXML()
+        );
+    }
+
+    public function testSetHomePageUrlAndFeedUrlEmitsMultipleLinks()
+    {
+        $feed = new \FeedIo\Feed();
+        $feed->setHomePageUrl('https://example.com/');
+        $feed->setFeedUrl('https://example.com/feed.atom');
+
+        $document = new \DOMDocument();
+        $rootElement = $document->createElement('feed');
+        $this->object->apply($document, $rootElement, $feed);
+
+        $document->appendChild($rootElement);
+
+        $this->assertXmlStringEqualsXmlString(
+            '<feed>'
+            . '<link rel="alternate" href="https://example.com/" type="text/html"/>'
+            . '<link rel="self" href="https://example.com/feed.atom" type="application/atom+xml"/>'
+            . '</feed>',
+            $document->saveXML()
+        );
+    }
 }

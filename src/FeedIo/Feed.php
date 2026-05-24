@@ -6,6 +6,7 @@ namespace FeedIo;
 
 use ArrayIterator;
 use FeedIo\Feed\Node;
+use FeedIo\Feed\Node\FeedLink;
 use FeedIo\Feed\Item;
 use FeedIo\Feed\ItemInterface;
 use FeedIo\Feed\ArrayableInterface;
@@ -16,6 +17,8 @@ class Feed extends Node implements FeedInterface, ArrayableInterface, \JsonSeria
     protected ArrayIterator $items;
 
     protected ArrayIterator $ns;
+
+    protected ArrayIterator $feedLinks;
 
     protected ?StyleSheet $styleSheet = null;
 
@@ -31,6 +34,7 @@ class Feed extends Node implements FeedInterface, ArrayableInterface, \JsonSeria
     {
         $this->items = new \ArrayIterator();
         $this->ns = new \ArrayIterator();
+        $this->feedLinks = new \ArrayIterator();
 
         parent::__construct();
     }
@@ -105,6 +109,44 @@ class Feed extends Node implements FeedInterface, ArrayableInterface, \JsonSeria
     public function getStyleSheet(): ?StyleSheet
     {
         return $this->styleSheet;
+    }
+
+    public function addLink(string $rel, string $href, ?string $type = null): FeedInterface
+    {
+        $this->feedLinks->append(new FeedLink($rel, $href, $type));
+
+        return $this;
+    }
+
+    public function getLinks(): iterable
+    {
+        return $this->feedLinks;
+    }
+
+    public function setHomePageUrl(string $url): FeedInterface
+    {
+        $this->setLink($url);
+        $this->addLink('alternate', $url, 'text/html');
+
+        return $this;
+    }
+
+    public function getHomePageUrl(): ?string
+    {
+        return $this->getLink();
+    }
+
+    public function setFeedUrl(string $url): FeedInterface
+    {
+        $this->setUrl($url);
+        $this->addLink('self', $url, 'application/atom+xml');
+
+        return $this;
+    }
+
+    public function getFeedUrl(): ?string
+    {
+        return $this->getUrl();
     }
 
     public function current(): ItemInterface

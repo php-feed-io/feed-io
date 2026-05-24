@@ -103,4 +103,53 @@ interface FeedInterface extends \Iterator, \Countable, NodeInterface
      * @return StyleSheet|null
      */
     public function getStyleSheet(): ?StyleSheet;
+
+    /**
+     * Adds a typed link to the feed's link collection.
+     *
+     * @param string $rel   Link relation (e.g. "alternate", "self")
+     * @param string $href  Link URL
+     * @param string|null $type Optional MIME type
+     * @return FeedInterface
+     */
+    public function addLink(string $rel, string $href, ?string $type = null): FeedInterface;
+
+    /**
+     * Returns all explicitly added feed-level links.
+     *
+     * @return iterable<\FeedIo\Feed\Node\FeedLink>
+     */
+    public function getLinks(): iterable;
+
+    /**
+     * Convenience method: sets the feed's homepage URL (rel="alternate").
+     * Also calls setLink() for backward compatibility.
+     *
+     * @param string $url
+     * @return FeedInterface
+     */
+    public function setHomePageUrl(string $url): FeedInterface;
+
+    /**
+     * Returns the feed's homepage URL.
+     *
+     * @return string|null
+     */
+    public function getHomePageUrl(): ?string;
+
+    /**
+     * Convenience method: sets the feed's own URL (rel="self").
+     * Also calls setUrl() for backward compatibility.
+     *
+     * @param string $url
+     * @return FeedInterface
+     */
+    public function setFeedUrl(string $url): FeedInterface;
+
+    /**
+     * Returns the feed's own URL.
+     *
+     * @return string|null
+     */
+    public function getFeedUrl(): ?string;
 }
