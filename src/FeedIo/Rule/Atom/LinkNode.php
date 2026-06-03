@@ -49,6 +49,11 @@ class LinkNode extends RuleAbstract
 
         if ($node instanceof FeedInterface && $this->hasFeedLinks($node)) {
             $this->addFeedLinks($document, $rootElement, $node);
+
+            if ($node->getLink() !== null && !$this->hasFeedLinkForHref($node, $node->getLink())) {
+                $this->ruleSet->getDefault()->apply($document, $rootElement, $node);
+            }
+
             return;
         }
 
@@ -59,6 +64,17 @@ class LinkNode extends RuleAbstract
     {
         foreach ($feed->getLinks() as $link) {
             return true;
+        }
+
+        return false;
+    }
+
+    protected function hasFeedLinkForHref(FeedInterface $feed, string $href): bool
+    {
+        foreach ($feed->getLinks() as $feedLink) {
+            if ($feedLink->getHref() === $href) {
+                return true;
+            }
         }
 
         return false;

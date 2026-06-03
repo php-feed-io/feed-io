@@ -70,7 +70,8 @@ class LinkNodeTest extends TestCase
 
         $addedElement = $rootElement->firstChild;
 
-        $this->assertInstanceOf('\DomElement', $addedElement);
+        $this->assertInstanceOf(\DOMElement::class, $addedElement);
+        /** @var \DOMElement $addedElement */
         $this->assertEquals(self::LINK, $addedElement->getAttribute('href'));
         $this->assertEquals('link', $addedElement->nodeName);
 
@@ -133,6 +134,27 @@ class LinkNodeTest extends TestCase
 
         $this->assertXmlStringEqualsXmlString(
             '<feed><link href="http://localhost"/></feed>',
+            $document->saveXML()
+        );
+    }
+
+    public function testLegacyLinkIsPreservedWhenFeedLinksArePresent()
+    {
+        $feed = new \FeedIo\Feed();
+        $feed->setLink('https://example.com/');
+        $feed->addLink('self', 'https://example.com/feed.atom');
+
+        $document = new \DOMDocument();
+        $rootElement = $document->createElement('feed');
+        $this->object->apply($document, $rootElement, $feed);
+
+        $document->appendChild($rootElement);
+
+        $this->assertXmlStringEqualsXmlString(
+            '<feed>'
+            . '<link rel="self" href="https://example.com/feed.atom"/>'
+            . '<link href="https://example.com/"/>'
+            . '</feed>',
             $document->saveXML()
         );
     }
