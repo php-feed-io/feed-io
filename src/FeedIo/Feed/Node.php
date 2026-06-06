@@ -204,6 +204,9 @@ class Node implements NodeInterface, ElementsAwareInterface, ArrayableInterface
             return null;
         }
         $partsUrl = parse_url($this->getLinkForAnalysis());
+        if (!is_array($partsUrl) || !isset($partsUrl['scheme'], $partsUrl['host'])) {
+            return null;
+        }
 
         return $partsUrl['scheme']."://".$partsUrl['host'];
     }
