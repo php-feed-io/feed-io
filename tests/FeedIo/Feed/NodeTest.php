@@ -106,7 +106,7 @@ class NodeTest extends TestCase
         $this->assertEquals(1, $count);
     }
 
-    public function testGetHostFromLinkReturnsNullWhenSchemeIsMissing()
+    public function testGetHostFromLinkReturnsNullForRelativePath()
     {
         $this->object->setLink('/relative/path');
 
