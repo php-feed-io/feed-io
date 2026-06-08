@@ -105,4 +105,11 @@ class NodeTest extends TestCase
 
         $this->assertEquals(1, $count);
     }
+
+    public function testGetHostFromLinkReturnsNullForRelativePath()
+    {
+        $this->object->setLink('/relative/path');
+
+        $this->assertNull($this->object->getHostFromLink());
+    }
 }
