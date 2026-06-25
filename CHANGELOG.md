@@ -8,11 +8,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
-- Add support for multiple feed-level links and Atom feed link emission, including rel="self" and rel="alternate" handling. (#69)
 
 ### Fixed
 
 ## Released
+## [v6.4.0] - 2026-06-25
+### Changed
+- Add support for multiple feed-level links and Atom feed link emission, including rel="self" and rel="alternate" handling. (#69)
+
+### Fixed
+- Fix host extraction for relative-path URLs by guarding missing URL schemes in node handling. (#74)
+
 ## [v6.3.1] - 2026-04-26
 Only dependency updates.
 
