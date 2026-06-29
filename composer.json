@@ -35,7 +35,7 @@
         "phpstan/phpstan": "^2.2.2",
         "friendsofphp/php-cs-fixer": "^3.95",
         "php-http/mock-client": "^1.5",
-        "rector/rector": "^2.4",
+        "rector/rector": "^2.5",
         "php-http/guzzle7-adapter": "^1.1"
     },
     "suggest": {
