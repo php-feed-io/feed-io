@@ -112,4 +112,109 @@ class NodeTest extends TestCase
 
         $this->assertNull($this->object->getHostFromLink());
     }
+
+    public function testSetHostInContentResolvesDotDotLinks(): void
+    {
+        $item = new Item();
+        $item->setLink('https://wiki.xxiivv.com/site/2026.html#20N');
+        $item->setContent("<p><a href='../site/metadata.html'>Metadata</a></p><img src='../media/refs/hello.png'/>");
+
+        $item->setHostInContent('https://wiki.xxiivv.com');
+
+        $this->assertStringContainsString(
+            "href='https://wiki.xxiivv.com/site/metadata.html'",
+            $item->getContent()
+        );
+        $this->assertStringContainsString(
+            "src='https://wiki.xxiivv.com/media/refs/hello.png'",
+            $item->getContent()
+        );
+    }
+
+    public function testSetHostInContentResolvesDotLinks(): void
+    {
+        $item = new Item();
+        $item->setLink('https://example.com/dir/page.html');
+        $item->setContent('<a href="./sibling.html">Sibling</a>');
+
+        $item->setHostInContent('https://example.com');
+
+        $this->assertStringContainsString(
+            'href="https://example.com/dir/sibling.html"',
+            $item->getContent()
+        );
+    }
+
+    public function testSetHostInContentPreservesQueryStringsAndFragments(): void
+    {
+        $item = new Item();
+        $item->setLink('https://example.com/dir/page.html');
+        $item->setContent('<a href="../page.html?x=1#sec">Sibling</a>');
+
+        $item->setHostInContent('https://example.com');
+
+        $this->assertStringContainsString(
+            'href="https://example.com/page.html?x=1#sec"',
+            $item->getContent()
+        );
+    }
+
+    public function testSetHostInContentKeepsAuthorityComponentsForRelativeLinks(): void
+    {
+        $cases = [
+            [
+                'link' => 'https://user:pass@example.com:8080/dir/page.html',
+                'expected' => 'https://user:pass@example.com:8080/page.html',
+            ],
+            [
+                'link' => 'https://example.com:8080/dir/page.html',
+                'expected' => 'https://example.com:8080/page.html',
+            ],
+            [
+                'link' => 'https://[2001:db8::1]/dir/page.html',
+                'expected' => 'https://[2001:db8::1]/page.html',
+            ],
+        ];
+
+        foreach ($cases as $case) {
+            $item = new Item();
+            $item->setLink($case['link']);
+            $item->setContent('<a href="../page.html">Sibling</a>');
+
+            $item->setHostInContent('https://example.com');
+
+            $this->assertStringContainsString(
+                'href="' . $case['expected'] . '"',
+                $item->getContent()
+            );
+        }
+    }
+
+    public function testSetHostInContentDoesNotModifyLinksInsideCodeTags(): void
+    {
+        $item = new Item();
+        $item->setLink('https://example.com/dir/page.html');
+        $item->setContent('<code><a href="../page.html">Sibling</a></code>');
+
+        $item->setHostInContent('https://example.com');
+
+        $this->assertStringContainsString(
+            '<code><a href="../page.html">Sibling</a></code>',
+            $item->getContent()
+        );
+    }
+
+    public function testSetHostInContentDoesNotModifyAbsoluteLinksInContent(): void
+    {
+        $item = new Item();
+        $item->setLink('https://example.com/dir/page.html');
+        $item->setContent('<a href="https://other.example.com/page.html">Other</a>');
+
+        $item->setHostInContent('https://example.com');
+
+        $this->assertStringContainsString(
+            'href="https://other.example.com/page.html"',
+            $item->getContent()
+        );
+    }
 }

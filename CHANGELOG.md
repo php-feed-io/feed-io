@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 ### Fixed
+- fix: resolve `../` and `./` relative links in feed item HTML content (#95)
 
 ## Released
 ## [v6.4.0] - 2026-06-25
