@@ -183,12 +183,101 @@ class Node implements NodeInterface, ElementsAwareInterface, ArrayableInterface
         $this->pregReplaceInProperty('content', $pattern, '\1\2\3'.$itemFullLink.'\4');
         $this->pregReplaceInProperty('description', $pattern, '\1\2\3'.$itemFullLink.'\4');
 
+        // Replaced links like href="../aaa/bbb.xxx" or href="./aaa/bbb.xxx"
+        if ($itemFullLink !== null) {
+            $this->resolveRelativePathLinksInContent($itemFullLink);
+        }
+
         // Replaced links like href="aaa/bbb.xxx"
         $pattern = '(<\s*[^>]*)(href=|src=)(.?)(\w+\b)(?![:])(?!(.(?!<code))*<\/code>)';
         $this->pregReplaceInProperty('content', $pattern, '\1\2\3'.$itemLink.'\4');
         $this->pregReplaceInProperty('description', $pattern, '\1\2\3'.$itemLink.'\4');
 
         return $this;
+    }
+
+    private function resolveRelativePathLinksInContent(string $itemFullLink): void
+    {
+        $parsed = parse_url($itemFullLink);
+        if (!is_array($parsed) || !isset($parsed['scheme'], $parsed['host'])) {
+            return;
+        }
+
+        $scheme = $parsed['scheme'];
+        $host = $parsed['host'];
+        if (str_contains($host, ':') && !str_starts_with($host, '[')) {
+            $host = '[' . $host . ']';
+        }
+        $authority = $host;
+        if (isset($parsed['port'])) {
+            $authority .= ':' . $parsed['port'];
+        }
+        if (isset($parsed['user'])) {
+            $userinfo = $parsed['user'];
+            if (isset($parsed['pass'])) {
+                $userinfo .= ':' . $parsed['pass'];
+            }
+            $authority = $userinfo . '@' . $authority;
+        }
+        $basePath = $parsed['path'] ?? '/';
+        $baseDir = substr($basePath, 0, strrpos($basePath, '/') + 1) ?: '/';
+
+        $resolver = function (array $matches) use ($scheme, $authority, $baseDir): string {
+            $href = $matches[3];
+            $merged = $baseDir . $href;
+            $segments = [];
+            foreach (explode('/', $merged) as $segment) {
+                if ($segment === '..') {
+                    if (!empty($segments)) {
+                        array_pop($segments);
+                    }
+                } elseif ($segment !== '.') {
+                    $segments[] = $segment;
+                }
+            }
+            $path = implode('/', $segments) ?: '/';
+            if (!str_starts_with($path, '/')) {
+                $path = '/' . $path;
+            }
+
+            return $matches[1] . $matches[2] . $scheme . '://' . $authority . $path . $matches[2];
+        };
+
+        foreach (['content', 'description'] as $property) {
+            $this->replaceRelativeLinksInProperty($property, $resolver);
+        }
+    }
+
+    private function replaceRelativeLinksInProperty(string $property, callable $resolver): void
+    {
+        if (!property_exists($this, $property) || is_null($this->{$property})) {
+            return;
+        }
+
+        $pattern = '~((?:href|src)=)(["\'])(\.{1,2}/[^"\'<>\s]*)\2~i';
+        $segments = preg_split('/(<\/?code>)/i', $this->{$property}, -1, PREG_SPLIT_DELIM_CAPTURE);
+        if ($segments === false) {
+            return;
+        }
+
+        $result = '';
+        $insideCode = false;
+        foreach ($segments as $segment) {
+            if (preg_match('/^<\/?code>$/i', $segment)) {
+                $insideCode = !$insideCode;
+                $result .= $segment;
+                continue;
+            }
+
+            if ($insideCode) {
+                $result .= $segment;
+                continue;
+            }
+
+            $result .= preg_replace_callback($pattern, $resolver, $segment) ?? $segment;
+        }
+
+        $this->{$property} = $result;
     }
 
     public function pregReplaceInProperty(string $property, string $pattern, string $replacement): void

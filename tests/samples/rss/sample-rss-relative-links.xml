@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+<channel>
+<title>XXIIVV</title>
+<link>https://wiki.xxiivv.com/</link>
+<description>Journal Logs</description>
+<item>
+<link>https://wiki.xxiivv.com/site/2026.html#20N</link>
+<pubDate>Thu, 02 Jul 2026 12:00:00 +0000</pubDate>
+<title>Ulysses</title>
+<description><![CDATA[ <p>Excerpt.</p> <ul> <li><a href='../site/metadata.html'>Metadata</a></li> </ul> <img src='../media/refs/hello.png' width='140'/> ]]></description>
+</item>
+<item>
+<link>https://wiki.xxiivv.com/site/2026.html#20M</link>
+<pubDate>Thu, 18 Jun 2026 12:00:00 +0000</pubDate>
+<title>They live deeply</title>
+<description><![CDATA[ <p>Another entry.</p> <ul> <li><a href='../site/flick.html'>Flick</a></li> </ul> <img src='../media/refs/geometryfun.png' width='140'/> ]]></description>
+</item>
+</channel>
+</rss>
