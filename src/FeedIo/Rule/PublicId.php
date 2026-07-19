@@ -17,9 +17,10 @@ class PublicId extends RuleAbstract
      */
     public function setProperty(NodeInterface $node, \DOMElement $element): void
     {
-        $node->setPublicId($element->nodeValue);
+        $isPermaLink = $element->getAttribute('isPermaLink') !== 'false';
+        $node->setPublicId($element->nodeValue, $isPermaLink);
         if ($element->nodeName === 'guid'
-        && $element->getAttribute('isPermaLink') === 'true'
+        && $isPermaLink
         && $node->getLink() === null) {
             $node->setLink($element->nodeValue);
         }
@@ -38,6 +39,10 @@ class PublicId extends RuleAbstract
      */
     protected function addElement(\DomDocument $document, \DOMElement $rootElement, NodeInterface $node): void
     {
-        $rootElement->appendChild($document->createElement($this->getNodeName(), $node->getPublicId()));
+        $element = $document->createElement($this->getNodeName(), $node->getPublicId());
+        if (!$node->getPublicIdIsPermaLink()) {
+            $element->setAttribute('isPermaLink', 'false');
+        }
+        $rootElement->appendChild($element);
     }
 }
