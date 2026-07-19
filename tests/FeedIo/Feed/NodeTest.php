@@ -204,6 +204,20 @@ class NodeTest extends TestCase
         );
     }
 
+    public function testSetHostInContentDoesNotModifyMagnetLinks(): void
+    {
+        $item = new Item();
+        $item->setLink('https://www.website.com/some/page');
+        $item->setContent('<a href="magnet:?xt=urn:btih:343434343434343434&dn=Example.File.Name%5D&tr=udp://tracker.opentrackr.org/announce">Torrent</a>');
+
+        $item->setHostInContent('https://www.website.com');
+
+        $this->assertStringContainsString(
+            'href="magnet:?xt=urn:btih:343434343434343434&dn=Example.File.Name%5D&tr=udp://tracker.opentrackr.org/announce"',
+            $item->getContent()
+        );
+    }
+
     public function testSetHostInContentDoesNotModifyAbsoluteLinksInContent(): void
     {
         $item = new Item();

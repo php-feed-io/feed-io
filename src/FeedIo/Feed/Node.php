@@ -206,13 +206,16 @@ class Node implements NodeInterface, ElementsAwareInterface, ArrayableInterface
         $scheme = $parsed['scheme'];
         $host = $parsed['host'];
         if (str_contains($host, ':') && !str_starts_with($host, '[')) {
+            // IPv6 hosts need brackets when we build the authority part of the URL.
             $host = '[' . $host . ']';
         }
         $authority = $host;
         if (isset($parsed['port'])) {
+            // Preserve an explicit port in the resolved absolute URL.
             $authority .= ':' . $parsed['port'];
         }
         if (isset($parsed['user'])) {
+            // Preserve user info, including an optional password, in the authority.
             $userinfo = $parsed['user'];
             if (isset($parsed['pass'])) {
                 $userinfo .= ':' . $parsed['pass'];
@@ -220,18 +223,33 @@ class Node implements NodeInterface, ElementsAwareInterface, ArrayableInterface
             $authority = $userinfo . '@' . $authority;
         }
         $basePath = $parsed['path'] ?? '/';
+        // Determine the directory of the item's link so relative paths resolve against it.
         $baseDir = substr($basePath, 0, strrpos($basePath, '/') + 1) ?: '/';
 
         $resolver = function (array $matches) use ($scheme, $authority, $baseDir): string {
             $href = $matches[3];
+
+            // Keep root-relative, hash-only, query-only, protocol-relative, and absolute URLs unchanged.
+            if ($href === '' || str_starts_with($href, '/') || str_starts_with($href, '#') || str_starts_with($href, '?') || str_starts_with($href, '//')) {
+                return $matches[0];
+            }
+
+            // Leave scheme-based URIs like magnet: or mailto: untouched.
+            if (preg_match('~^[a-z][a-z0-9+.-]*:~i', $href) === 1) {
+                return $matches[0];
+            }
+
+            // Resolve the relative path against the item's base directory.
             $merged = $baseDir . $href;
             $segments = [];
             foreach (explode('/', $merged) as $segment) {
                 if ($segment === '..') {
+                    // Move up one directory when possible.
                     if (!empty($segments)) {
                         array_pop($segments);
                     }
                 } elseif ($segment !== '.') {
+                    // Drop current-directory markers and keep the remaining path segments.
                     $segments[] = $segment;
                 }
             }
@@ -240,6 +258,7 @@ class Node implements NodeInterface, ElementsAwareInterface, ArrayableInterface
                 $path = '/' . $path;
             }
 
+            // Rebuild the link as an absolute URL using the original scheme and authority.
             return $matches[1] . $matches[2] . $scheme . '://' . $authority . $path . $matches[2];
         };
 
@@ -254,7 +273,7 @@ class Node implements NodeInterface, ElementsAwareInterface, ArrayableInterface
             return;
         }
 
-        $pattern = '~((?:href|src)=)(["\'])(\.{1,2}/[^"\'<>\s]*)\2~i';
+        $pattern = '~((?:href|src)=)(["\'])([^"\'<>\s]+)\2~i';
         $segments = preg_split('/(<\/?code>)/i', $this->{$property}, -1, PREG_SPLIT_DELIM_CAPTURE);
         if ($segments === false) {
             return;

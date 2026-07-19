@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 ### Fixed
+- fix: ensure magnet links remain unchanged when setting host in content (#102)
 - fix: resolve `../` and `./` relative links in feed item HTML content (#95)
 
 ## Released
