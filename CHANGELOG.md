@@ -10,10 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 ### Fixed
+
+## Released
+## [v6.4.1] - 2026-07-19
+### Fixed
 - fix: ensure magnet links remain unchanged when setting host in content (#102)
 - fix: resolve `../` and `./` relative links in feed item HTML content (#95)
 
-## Released
 ## [v6.4.0] - 2026-06-25
 ### Changed
 - Add support for multiple feed-level links and Atom feed link emission, including rel="self" and rel="alternate" handling. (#69)
