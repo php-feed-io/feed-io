@@ -26,6 +26,8 @@ class Node implements NodeInterface, ElementsAwareInterface, ArrayableInterface
 
     protected ?string $publicId = null;
 
+    protected bool $publicIdIsPermaLink = true;
+
     protected ?string $link = null;
 
     protected ?string $host = null;
@@ -108,11 +110,17 @@ class Node implements NodeInterface, ElementsAwareInterface, ArrayableInterface
         return $this->publicId;
     }
 
-    public function setPublicId(?string $publicId = null): NodeInterface
+    public function setPublicId(?string $publicId = null, bool $isPermaLink = true): NodeInterface
     {
         $this->publicId = $publicId;
+        $this->publicIdIsPermaLink = $isPermaLink;
 
         return $this;
+    }
+
+    public function getPublicIdIsPermaLink(): bool
+    {
+        return $this->publicIdIsPermaLink;
     }
 
     public function getLastModified(): ?DateTime

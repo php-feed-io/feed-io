@@ -62,9 +62,17 @@ interface NodeInterface
      * sets node's public id
      *
      * @param  string $id
+     * @param  bool   $isPermaLink
      * @return NodeInterface
      */
-    public function setPublicId(?string $id = null): NodeInterface;
+    public function setPublicId(?string $id = null, bool $isPermaLink = true): NodeInterface;
+
+    /**
+     * Returns whether the public id is a permalink
+     *
+     * @return bool
+     */
+    public function getPublicIdIsPermaLink(): bool;
 
     /**
      * Returns the node's last modified date
