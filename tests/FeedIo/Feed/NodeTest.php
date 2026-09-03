@@ -231,4 +231,45 @@ class NodeTest extends TestCase
             $item->getContent()
         );
     }
+
+    public function testSetHostInContentRewritesRootRelativeLinksInElements(): void
+    {
+        $item = new Item();
+        $item->setLink('https://jmduke.com/posts/adaptation.html');
+
+        $element = $item->newElement();
+        $element->setName('content:encoded');
+        $element->setValue('<p>See <a href="/posts/being-john-malkovich.html">BJM</a> and <a href="https://external.com">external</a></p>');
+        $item->addElement($element);
+
+        $item->setHostInContent('https://jmduke.com');
+
+        $stored = null;
+        foreach ($item->getElementIterator('content:encoded') as $el) {
+            $stored = $el->getValue();
+        }
+
+        $this->assertStringContainsString('href="https://jmduke.com/posts/being-john-malkovich.html"', $stored);
+        $this->assertStringContainsString('href="https://external.com"', $stored);
+    }
+
+    public function testSetHostInContentRewritesRelativePathLinksInElements(): void
+    {
+        $item = new Item();
+        $item->setLink('https://example.com/posts/page.html');
+
+        $element = $item->newElement();
+        $element->setName('content:encoded');
+        $element->setValue('<a href="../other.html">Other</a>');
+        $item->addElement($element);
+
+        $item->setHostInContent('https://example.com');
+
+        $stored = null;
+        foreach ($item->getElementIterator('content:encoded') as $el) {
+            $stored = $el->getValue();
+        }
+
+        $this->assertStringContainsString('href="https://example.com/other.html"', $stored);
+    }
 }
