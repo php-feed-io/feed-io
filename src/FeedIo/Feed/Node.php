@@ -193,6 +193,23 @@ class Node implements NodeInterface, ElementsAwareInterface, ArrayableInterface
         $this->pregReplaceInProperty('content', $pattern, '\1\2\3'.$itemLink.'\4');
         $this->pregReplaceInProperty('description', $pattern, '\1\2\3'.$itemLink.'\4');
 
+        // Apply the same rewriting to elements that contain HTML (e.g. content:encoded).
+        // Step 3 (resolveRelativePathLinksInContent) already ran for elements above;
+        // here we handle the remaining root-relative, fragment, and bare-word patterns.
+        $rootPattern = '~(<\s*[^>]*)(href=|src=)(.?)(\/[^\/])(?!(.(?!<code))*<\/code>)~';
+        $hashPattern = '~(<\s*[^>]*)(href=|src=)(.?)(#)(?!(.(?!<code))*<\/code>)~';
+        $wordPattern = '~(<\s*[^>]*)(href=|src=)(.?)(\w+\b)(?![:])(?!(.(?!<code))*<\/code>)~';
+        foreach ($this->getAllElements() as $element) {
+            $value = $element->getValue();
+            if ($value === null || (!str_contains($value, 'href=') && !str_contains($value, 'src='))) {
+                continue;
+            }
+            $value = preg_replace($rootPattern, '\1\2\3'.$host.'\4', $value) ?? $value;
+            $value = preg_replace($hashPattern, '\1\2\3'.$itemFullLink.'\4', $value) ?? $value;
+            $value = preg_replace($wordPattern, '\1\2\3'.$itemLink.'\4', $value) ?? $value;
+            $element->setValue($value);
+        }
+
         return $this;
     }
 
@@ -265,18 +282,22 @@ class Node implements NodeInterface, ElementsAwareInterface, ArrayableInterface
         foreach (['content', 'description'] as $property) {
             $this->replaceRelativeLinksInProperty($property, $resolver);
         }
+
+        // Also resolve relative links in elements that contain HTML (e.g. content:encoded).
+        foreach ($this->getAllElements() as $element) {
+            $value = $element->getValue();
+            if ($value !== null && (str_contains($value, 'href=') || str_contains($value, 'src='))) {
+                $element->setValue($this->applyResolverToHtml($value, $resolver));
+            }
+        }
     }
 
-    private function replaceRelativeLinksInProperty(string $property, callable $resolver): void
+    private function applyResolverToHtml(string $html, callable $resolver): string
     {
-        if (!property_exists($this, $property) || is_null($this->{$property})) {
-            return;
-        }
-
         $pattern = '~((?:href|src)=)(["\'])([^"\'<>\s]+)\2~i';
-        $segments = preg_split('/(<\/?code>)/i', $this->{$property}, -1, PREG_SPLIT_DELIM_CAPTURE);
+        $segments = preg_split('/(<\/?code>)/i', $html, -1, PREG_SPLIT_DELIM_CAPTURE);
         if ($segments === false) {
-            return;
+            return $html;
         }
 
         $result = '';
@@ -296,7 +317,16 @@ class Node implements NodeInterface, ElementsAwareInterface, ArrayableInterface
             $result .= preg_replace_callback($pattern, $resolver, $segment) ?? $segment;
         }
 
-        $this->{$property} = $result;
+        return $result;
+    }
+
+    private function replaceRelativeLinksInProperty(string $property, callable $resolver): void
+    {
+        if (!property_exists($this, $property) || is_null($this->{$property})) {
+            return;
+        }
+
+        $this->{$property} = $this->applyResolverToHtml($this->{$property}, $resolver);
     }
 
     public function pregReplaceInProperty(string $property, string $pattern, string $replacement): void
