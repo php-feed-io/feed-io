@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- Add isPermaLink=false support to setPublicId() - (#103)
 
 ### Fixed
 
