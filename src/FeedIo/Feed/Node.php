@@ -201,7 +201,7 @@ class Node implements NodeInterface, ElementsAwareInterface, ArrayableInterface
         $wordPattern = '~(<\s*[^>]*)(href=|src=)(.?)(\w+\b)(?![:])(?!(.(?!<code))*<\/code>)~';
         foreach ($this->getAllElements() as $element) {
             $value = $element->getValue();
-            if ($value === null || (!str_contains($value, 'href=') && !str_contains($value, 'src='))) {
+            if ($value === null || preg_match('~(?:href|src)=~i', $value) !== 1) {
                 continue;
             }
             $value = preg_replace($rootPattern, '\1\2\3'.$host.'\4', $value) ?? $value;
