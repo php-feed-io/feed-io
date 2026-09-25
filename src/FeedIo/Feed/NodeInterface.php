@@ -30,6 +30,21 @@ interface NodeInterface
     public function setAuthor(?AuthorInterface $author = null): NodeInterface;
 
     /**
+     * returns all the authors of the node, in document order
+     *
+     * @return iterable
+     */
+    public function getAuthors(): iterable;
+
+    /**
+     * adds an author to the node, getAuthor() returns the last one added
+     *
+     * @param AuthorInterface $author
+     * @return NodeInterface
+     */
+    public function addAuthor(AuthorInterface $author): NodeInterface;
+
+    /**
      * returns a new AuthorInterface
      *
      * @return AuthorInterface
