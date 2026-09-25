@@ -65,6 +65,24 @@ class AuthorTest extends TestCase
         $this->assertEquals('john@localhost', $item->getAuthor()->getEmail());
     }
 
+    public function testSetKeepsFirstAuthorWhenMultipleAreGiven()
+    {
+        $item = new Item();
+
+        $document = new \DOMDocument();
+
+        $first = $document->createElement('author');
+        $first->appendChild($document->createElement('name', 'John Doe'));
+
+        $second = $document->createElement('author');
+        $second->appendChild($document->createElement('name', 'Jane Roe'));
+
+        $this->object->setProperty($item, $first);
+        $this->object->setProperty($item, $second);
+
+        $this->assertEquals('John Doe', $item->getAuthor()->getName());
+    }
+
     public function testGetChildValue()
     {
         $document = new \DOMDocument();
