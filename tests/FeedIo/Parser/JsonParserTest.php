@@ -68,10 +68,32 @@ class JsonParserTest extends TestCase
             ['id' => '3'],
         ], $feed);
 
+        /** @var \FeedIo\Feed\ItemInterface[] $items */
         $items = iterator_to_array($feed);
 
         $this->assertEquals(new \DateTime('2010-02-07T14:04:00-05:00'), $items[0]->getLastModified());
         $this->assertEquals(new \DateTime('2011-01-01T00:00:00Z'), $items[1]->getLastModified());
         $this->assertNull($items[2]->getLastModified());
+    }
+
+    public function testParseContentKeepsEveryAuthor()
+    {
+        $json = json_encode([
+            'version' => 'https://jsonfeed.org/version/1.1',
+            'title' => 'JSON Feed',
+            'authors' => [
+                ['name' => 'John Doe'],
+                ['name' => 'Jane Roe'],
+            ],
+            'items' => [],
+        ]);
+        $parser = new JsonParser(new Json(new DateTimeBuilder()), new NullLogger());
+        $feed = new Feed();
+
+        $parser->parse(new Document($json), $feed);
+
+        $this->assertEquals('John Doe', $feed->getAuthor()->getName());
+        $names = array_map(fn ($author) => $author->getName(), [...$feed->getAuthors()]);
+        $this->assertEquals(['John Doe', 'Jane Roe'], $names);
     }
 }

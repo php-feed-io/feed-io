@@ -55,6 +55,25 @@ class NodeTest extends TestCase
         $this->assertEquals($lastModified, $this->object->getLastModified());
     }
 
+    public function testGetAuthorsFallsBackToSetAuthor()
+    {
+        $this->assertEquals([], $this->object->getAuthors());
+
+        $author = $this->object->newAuthor();
+        $this->object->setAuthor($author);
+
+        $this->assertSame([$author], $this->object->getAuthors());
+    }
+
+    public function testToArrayIncludesEveryAuthor()
+    {
+        $this->object->addAuthor($this->object->newAuthor()->setName('John Doe'));
+        $this->object->addAuthor($this->object->newAuthor()->setName('Jane Roe'));
+
+        $authors = $this->object->toArray()['authors'];
+        $this->assertEquals(['John Doe', 'Jane Roe'], array_column($authors, 'name'));
+    }
+
     public function testNewCategory()
     {
         $this->assertInstanceOf('\FeedIo\Feed\Node\CategoryInterface', $this->object->newCategory());

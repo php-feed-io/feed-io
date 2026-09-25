@@ -8,9 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- Add isPermaLink=false support to setPublicId() - (#103)
+- Keep every author of a node, available through getAuthors() - (#141)
+
+### Deprecated
+- Deprecate getAuthor() and setAuthor() in favor of getAuthors(), setAuthors(), and addAuthor(); planned removal in the next major release.
 
 ### Fixed
 - fix: accept JSON Feed items without `date_published`, falling back to `date_modified` (#159)
+- fix: rewrite relative links in `content:encoded` and other optional elements, not only in `content`/`description` properties
 
 ## Released
 ## [v6.5.0] - 2026-10-25
