@@ -15,6 +15,13 @@ class Author extends RuleAbstract
 
     public function setProperty(NodeInterface $node, DOMElement $element): void
     {
+        // An Atom entry can have several <author> elements (RFC 4287 §4.1.2). This
+        // rule fires once per element, so keep the first author and ignore the
+        // rest rather than let the last one silently overwrite it.
+        if ($node->getAuthor() !== null) {
+            return;
+        }
+
         $author = $node->newAuthor();
         $author->setName($this->getChildValue($element, 'name'));
         $author->setUri($this->getChildValue($element, 'uri'));

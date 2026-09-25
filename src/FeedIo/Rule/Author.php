@@ -20,7 +20,10 @@ class Author extends RuleAbstract
      */
     public function setProperty(NodeInterface $node, \DOMElement $element): void
     {
-        if ($node instanceof ItemInterface) {
+        // Some feeds carry more than one <author>/<dc:creator> element per item.
+        // This rule fires once per element, so keep the first author and ignore
+        // the rest rather than let the last one silently overwrite it.
+        if ($node instanceof ItemInterface && $node->getAuthor() === null) {
             $author = $node->newAuthor();
             $author->setName($element->nodeValue);
             $node->setAuthor($author);
