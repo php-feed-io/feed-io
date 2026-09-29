@@ -37,6 +37,16 @@ class AuthorTest extends TestCase
         $this->assertEquals(self::AUTHOR, $item->getAuthor()->getName());
     }
 
+    public function testSetKeepsFirstAuthorWhenMultipleAreGiven()
+    {
+        $item = new Item();
+
+        $this->object->setProperty($item, new \DOMElement('author', self::AUTHOR));
+        $this->object->setProperty($item, new \DOMElement('author', 'Jane Roe'));
+
+        $this->assertEquals(self::AUTHOR, $item->getAuthor()->getName());
+    }
+
     public function testCreateElement()
     {
         $item = new Item();
