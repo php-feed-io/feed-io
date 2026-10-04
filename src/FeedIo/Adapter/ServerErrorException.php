@@ -12,10 +12,15 @@ class ServerErrorException extends HttpRequestException
         protected ResponseInterface $response,
         float $duration = 0
     ) {
-        parent::__construct(
-            'internal server error',
-            $duration
+        $statusCode = $response->getStatusCode();
+        $reasonPhrase = trim($response->getReasonPhrase());
+        $message = sprintf(
+            'Server responded with: %d%s',
+            $statusCode,
+            $reasonPhrase !== '' ? ' ' . $reasonPhrase : ''
         );
+
+        parent::__construct($message, $duration);
     }
 
     public function getResponse(): ResponseInterface

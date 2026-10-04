@@ -8,7 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
-- Add isPermaLink=false support to setPublicId() - (#103)
+- Add isPermaLink=false support to setPublicId() (#103)
+- Return better error messages when remote responds with error code (#146)
 
 ### Fixed
 - fix: rewrite relative links in `content:encoded` and other optional elements, not only in `content`/`description` properties
