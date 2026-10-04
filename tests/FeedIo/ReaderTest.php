@@ -52,6 +52,9 @@ class ReaderTest extends TestCase
     protected function getFaultyClientMock()
     {
         $response = $this->createMock('Psr\Http\Message\ResponseInterface');
+        $response->method('getStatusCode')->willReturn(403);
+        $response->method('getReasonPhrase')->willReturn('Forbidden');
+
         $client = $this->createMock('FeedIo\Adapter\ClientInterface');
         $client->expects($this->any())->method('getResponse')->willThrowException(
             new ServerErrorException($response, 0)
