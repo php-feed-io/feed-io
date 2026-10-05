@@ -9,10 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Add isPermaLink=false support to setPublicId() - (#103)
+- Keep every author of a node, available through getAuthors() - (#141)
 
 ### Fixed
 - fix: rewrite relative links in `content:encoded` and other optional elements, not only in `content`/`description` properties
-- fix: keep the first author instead of the last when an item has several author elements (#141)
 
 ## Released
 ## [v6.4.1] - 2026-07-19

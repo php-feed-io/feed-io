@@ -65,7 +65,7 @@ class AuthorTest extends TestCase
         $this->assertEquals('john@localhost', $item->getAuthor()->getEmail());
     }
 
-    public function testSetKeepsFirstAuthorWhenMultipleAreGiven()
+    public function testSetKeepsEveryAuthorAndGetAuthorReturnsTheLast()
     {
         $item = new Item();
 
@@ -80,7 +80,9 @@ class AuthorTest extends TestCase
         $this->object->setProperty($item, $first);
         $this->object->setProperty($item, $second);
 
-        $this->assertEquals('John Doe', $item->getAuthor()->getName());
+        $this->assertEquals('Jane Roe', $item->getAuthor()->getName());
+        $names = array_map(fn ($author) => $author->getName(), iterator_to_array($item->getAuthors(), false));
+        $this->assertEquals(['John Doe', 'Jane Roe'], $names);
     }
 
     public function testGetChildValue()

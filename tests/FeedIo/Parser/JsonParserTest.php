@@ -56,4 +56,25 @@ class JsonParserTest extends TestCase
         $this->assertEquals('http://manton.org', $items[3]['author']['uri']);
         $this->assertEquals('manton@micro.blog', $items[3]['author']['email']);
     }
+
+    public function testParseContentKeepsEveryAuthor()
+    {
+        $json = json_encode([
+            'version' => 'https://jsonfeed.org/version/1.1',
+            'title' => 'JSON Feed',
+            'authors' => [
+                ['name' => 'John Doe'],
+                ['name' => 'Jane Roe'],
+            ],
+            'items' => [],
+        ]);
+        $parser = new JsonParser(new Json(new DateTimeBuilder()), new NullLogger());
+        $feed = new Feed();
+
+        $parser->parse(new Document($json), $feed);
+
+        $this->assertEquals('John Doe', $feed->getAuthor()->getName());
+        $names = array_map(fn ($author) => $author->getName(), iterator_to_array($feed->getAuthors(), false));
+        $this->assertEquals(['John Doe', 'Jane Roe'], $names);
+    }
 }

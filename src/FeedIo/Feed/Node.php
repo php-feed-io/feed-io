@@ -20,6 +20,8 @@ class Node implements NodeInterface, ElementsAwareInterface, ArrayableInterface
 
     protected ?AuthorInterface $author = null;
 
+    protected array $authors = [];
+
     protected ?DateTime $lastModified = null;
 
     protected ?string $title = null;
@@ -59,6 +61,23 @@ class Node implements NodeInterface, ElementsAwareInterface, ArrayableInterface
 
     public function setAuthor(?AuthorInterface $author = null): NodeInterface
     {
+        $this->author = $author;
+
+        return $this;
+    }
+
+    public function getAuthors(): iterable
+    {
+        if (!empty($this->authors)) {
+            return $this->authors;
+        }
+
+        return $this->author !== null ? [$this->author] : [];
+    }
+
+    public function addAuthor(AuthorInterface $author): NodeInterface
+    {
+        $this->authors[] = $author;
         $this->author = $author;
 
         return $this;
@@ -371,6 +390,7 @@ class Node implements NodeInterface, ElementsAwareInterface, ArrayableInterface
         $properties = get_object_vars($this);
         $properties['elements'] = iterator_to_array($this->getElementsGenerator());
         $properties['categories'] = iterator_to_array($this->getCategoriesGenerator());
+        $properties['authors'] = new \ArrayIterator($this->authors);
 
         foreach ($properties as $name => $property) {
             if ($property instanceof \DateTime) {
