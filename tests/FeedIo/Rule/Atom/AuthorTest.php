@@ -81,7 +81,7 @@ class AuthorTest extends TestCase
         $this->object->setProperty($item, $second);
 
         $this->assertEquals('Jane Roe', $item->getAuthor()->getName());
-        $names = array_map(fn ($author) => $author->getName(), iterator_to_array($item->getAuthors(), false));
+        $names = array_map(fn ($author) => $author->getName(), [...$item->getAuthors()]);
         $this->assertEquals(['John Doe', 'Jane Roe'], $names);
     }
 

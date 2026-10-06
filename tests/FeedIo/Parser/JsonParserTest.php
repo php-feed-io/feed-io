@@ -74,7 +74,7 @@ class JsonParserTest extends TestCase
         $parser->parse(new Document($json), $feed);
 
         $this->assertEquals('John Doe', $feed->getAuthor()->getName());
-        $names = array_map(fn ($author) => $author->getName(), iterator_to_array($feed->getAuthors(), false));
+        $names = array_map(fn ($author) => $author->getName(), [...$feed->getAuthors()]);
         $this->assertEquals(['John Doe', 'Jane Roe'], $names);
     }
 }

@@ -45,7 +45,7 @@ class AuthorTest extends TestCase
         $this->object->setProperty($item, new \DOMElement('author', 'Jane Roe'));
 
         $this->assertEquals('Jane Roe', $item->getAuthor()->getName());
-        $names = array_map(fn ($author) => $author->getName(), iterator_to_array($item->getAuthors(), false));
+        $names = array_map(fn ($author) => $author->getName(), [...$item->getAuthors()]);
         $this->assertEquals([self::AUTHOR, 'Jane Roe'], $names);
     }
 
