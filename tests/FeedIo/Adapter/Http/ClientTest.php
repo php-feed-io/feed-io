@@ -105,6 +105,22 @@ class ClientTest extends TestCase
             ->willReturn($psrResponse);
 
         $this->expectException(ServerErrorException::class);
+        $this->expectExceptionMessage('Server responded with: 500 Internal Server Error');
+
+        $this->client->getResponse('https://example.com/feed.xml');
+    }
+
+    public function testGetResponseThrowsServerErrorOnForbidden(): void
+    {
+        $psrResponse = new PsrResponse(403, [], 'Forbidden');
+
+        $this->psrClient
+            ->expects($this->once())
+            ->method('sendRequest')
+            ->willReturn($psrResponse);
+
+        $this->expectException(ServerErrorException::class);
+        $this->expectExceptionMessage('Server responded with: 403 Forbidden');
 
         $this->client->getResponse('https://example.com/feed.xml');
     }
