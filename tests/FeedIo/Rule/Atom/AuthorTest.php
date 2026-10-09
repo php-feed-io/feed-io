@@ -65,6 +65,26 @@ class AuthorTest extends TestCase
         $this->assertEquals('john@localhost', $item->getAuthor()->getEmail());
     }
 
+    public function testSetKeepsEveryAuthorAndGetAuthorReturnsTheLast()
+    {
+        $item = new Item();
+
+        $document = new \DOMDocument();
+
+        $first = $document->createElement('author');
+        $first->appendChild($document->createElement('name', 'John Doe'));
+
+        $second = $document->createElement('author');
+        $second->appendChild($document->createElement('name', 'Jane Roe'));
+
+        $this->object->setProperty($item, $first);
+        $this->object->setProperty($item, $second);
+
+        $this->assertEquals('Jane Roe', $item->getAuthor()->getName());
+        $names = array_map(fn ($author) => $author->getName(), [...$item->getAuthors()]);
+        $this->assertEquals(['John Doe', 'Jane Roe'], $names);
+    }
+
     public function testGetChildValue()
     {
         $document = new \DOMDocument();

@@ -19,7 +19,7 @@ class Author extends RuleAbstract
         $author->setName($this->getChildValue($element, 'name'));
         $author->setUri($this->getChildValue($element, 'uri'));
         $author->setEmail($this->getChildValue($element, 'email'));
-        $node->setAuthor($author);
+        $node->addAuthor($author);
     }
 
     protected function hasValue(NodeInterface $node): bool
