@@ -37,6 +37,18 @@ class AuthorTest extends TestCase
         $this->assertEquals(self::AUTHOR, $item->getAuthor()->getName());
     }
 
+    public function testSetKeepsEveryAuthorAndGetAuthorReturnsTheLast()
+    {
+        $item = new Item();
+
+        $this->object->setProperty($item, new \DOMElement('author', self::AUTHOR));
+        $this->object->setProperty($item, new \DOMElement('author', 'Jane Roe'));
+
+        $this->assertEquals('Jane Roe', $item->getAuthor()->getName());
+        $names = array_map(fn ($author) => $author->getName(), [...$item->getAuthors()]);
+        $this->assertEquals([self::AUTHOR, 'Jane Roe'], $names);
+    }
+
     public function testCreateElement()
     {
         $item = new Item();

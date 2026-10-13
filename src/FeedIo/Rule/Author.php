@@ -23,7 +23,7 @@ class Author extends RuleAbstract
         if ($node instanceof ItemInterface) {
             $author = $node->newAuthor();
             $author->setName($element->nodeValue);
-            $node->setAuthor($author);
+            $node->addAuthor($author);
         }
     }
 
