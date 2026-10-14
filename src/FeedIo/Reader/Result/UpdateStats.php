@@ -75,7 +75,7 @@ class UpdateStats
         $newTimestamp = $now + $minDelay;
         foreach ($intervals as $interval) {
             $computedTimestamp = $this->addInterval($this->newestItemDate, $interval, $marginRatio);
-            if ($computedTimestamp > $now) {
+            if ($computedTimestamp > $newTimestamp) {
                 $newTimestamp = $computedTimestamp;
                 break;
             }
@@ -117,7 +117,7 @@ class UpdateStats
      */
     public function getMinInterval(): int
     {
-        return count($this->intervals) ? min($this->intervals) : 0;
+        return !empty($this->intervals) ? min($this->intervals) : 0;
     }
 
     /**
@@ -125,7 +125,7 @@ class UpdateStats
      */
     public function getMaxInterval(): int
     {
-        return count($this->intervals) ? max($this->intervals) : 0;
+        return !empty($this->intervals) ? max($this->intervals) : 0;
     }
 
     /**
@@ -134,12 +134,13 @@ class UpdateStats
     public function getAverageInterval(): int
     {
         $intervals = $this->intervals;
-        sort($intervals);
-
-        $count = count($intervals);
+        $count     = count($intervals);
+        
         if ($count === 0) {
             return 0;
         }
+        
+        sort($intervals);
 
         // some feeds could have very old historic
         // articles so eliminate them using statistical methods
@@ -165,12 +166,13 @@ class UpdateStats
     public function getMedianInterval(): int
     {
         $intervals = $this->intervals;
-        sort($intervals);
-
-        $count = count($intervals);
+        $count     = count($intervals);
+        
         if ($count === 0) {
             return 0;
         }
+        
+        sort($intervals);
 
         $num = (int) floor($count / 2);
 
