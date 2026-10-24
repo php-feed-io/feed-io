@@ -66,7 +66,9 @@ class JsonParser extends ParserAbstract
             $item = new Item();
             $item->setPublicId($this->readOffset($dataItem, 'id'));
             $item->setTitle($this->readOffset($dataItem, 'title'));
-            $item->setLastModified(new \DateTime($this->readOffset($dataItem, 'date_published')));
+            // Both dates are optional in JSON Feed: leave it unset when missing, as the RSS and Atom parsers do
+            $date = $this->readOffset($dataItem, 'date_published') ?? $this->readOffset($dataItem, 'date_modified');
+            $item->setLastModified(is_null($date) ? null : new \DateTime($date));
             $contentHtml = $this->readOffset($dataItem, 'content_html');
             $item->setContent($this->readOffset($dataItem, 'content_text', $contentHtml));
             $item->setSummary($this->readOffset($dataItem, 'summary'));
