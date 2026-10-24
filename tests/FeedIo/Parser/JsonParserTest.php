@@ -56,4 +56,22 @@ class JsonParserTest extends TestCase
         $this->assertEquals('http://manton.org', $items[3]['author']['uri']);
         $this->assertEquals('manton@micro.blog', $items[3]['author']['email']);
     }
+
+    public function testParseItemsWithOptionalDates()
+    {
+        $parser = new JsonParser(new Json(new DateTimeBuilder()), new NullLogger());
+        $feed = new Feed();
+
+        $parser->parseItems([
+            ['id' => '1', 'date_published' => '2010-02-07T14:04:00-05:00', 'date_modified' => '2011-01-01T00:00:00Z'],
+            ['id' => '2', 'date_modified' => '2011-01-01T00:00:00Z'],
+            ['id' => '3'],
+        ], $feed);
+
+        $items = iterator_to_array($feed);
+
+        $this->assertEquals(new \DateTime('2010-02-07T14:04:00-05:00'), $items[0]->getLastModified());
+        $this->assertEquals(new \DateTime('2011-01-01T00:00:00Z'), $items[1]->getLastModified());
+        $this->assertNull($items[2]->getLastModified());
+    }
 }
