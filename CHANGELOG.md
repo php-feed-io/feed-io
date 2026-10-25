@@ -8,13 +8,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+
+### Fixed
+
+## Released
+## [v6.5.0] - 2026-10-25
+### Changed
 - Add isPermaLink=false support to setPublicId() (#103)
 - Return better error messages when remote responds with error code (#146)
 
 ### Fixed
-- fix: rewrite relative links in `content:encoded` and other optional elements, not only in `content`/`description` properties
+- fix: rewrite relative links in `content:encoded` and other optional elements, not only in `content`/`description` properties (#122)
 
-## Released
 ## [v6.4.1] - 2026-07-19
 ### Fixed
 - fix: ensure magnet links remain unchanged when setting host in content (#102)
