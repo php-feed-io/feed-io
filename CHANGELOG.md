@@ -8,18 +8,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+
+### Fixed
+
+## Released
+## [v7.0.0-beta.1] - 2026-10-31
+### Changed
 - Add isPermaLink=false support to setPublicId() - (#103)
-- Keep every author of a node, available through getAuthors() - (#141)
+- Add getAuthors(), setAuthors(), and addAuthor() as the recommended API for managing node authors. (#141)
 
 ### Deprecated
-- Deprecate getAuthor() and setAuthor() in favor of getAuthors(), setAuthors(), and addAuthor(); planned removal in the next major release.
+- Deprecate getAuthor() and setAuthor() in favor of getAuthors(), setAuthors(), and addAuthor(); planned removal in the next major release. (#163)
 
 ### Fixed
 - fix: accept JSON Feed items without `date_published`, falling back to `date_modified` (#159)
-- fix: rewrite relative links in `content:encoded` and other optional elements, not only in `content`/`description` properties
-- Reset author collections when parsing into reused feeds and limit RSS 2.0 items to one core `author` element.
+- fix: rewrite relative links in `content:encoded` and other optional elements, not only in `content`/`description` properties (#122)
 
-## Released
 ## [v6.5.0] - 2026-10-25
 ### Changed
 - Add isPermaLink=false support to setPublicId() (#103)
