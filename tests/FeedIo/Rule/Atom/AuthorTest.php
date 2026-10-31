@@ -119,4 +119,21 @@ class AuthorTest extends TestCase
             $document->saveXML()
         );
     }
+
+    public function testCreateElementsForEveryAuthorInOrder()
+    {
+        $item = new Item();
+        $first = (new \FeedIo\Feed\Item\Author())->setName('John Doe');
+        $second = (new \FeedIo\Feed\Item\Author())->setName('Jane Roe');
+        $item->setAuthors([$first, $second]);
+
+        $document = new \DOMDocument();
+        $rootElement = $document->createElement('entry');
+        $this->object->apply($document, $rootElement, $item);
+
+        $this->assertSame(['John Doe', 'Jane Roe'], array_map(
+            static fn (\DOMElement $element): string => $element->getElementsByTagName('name')->item(0)->nodeValue,
+            iterator_to_array($rootElement->childNodes)
+        ));
+    }
 }

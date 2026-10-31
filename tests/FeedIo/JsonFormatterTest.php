@@ -68,6 +68,22 @@ class JsonFormatterTest extends TestCase
         $this->assertFalse($formatter->isHtml('lorem ipsum'));
     }
 
+    public function testToStringIncludesEveryAuthorInOrder()
+    {
+        $feed = new \FeedIo\Feed();
+        $feed->addAuthor((new Item\Author())->setName('Feed author one'));
+        $feed->addAuthor((new Item\Author())->setName('Feed author two'));
+
+        $item = $this->getItem('item', 'content');
+        $item->addAuthor((new Item\Author())->setName('Item author two'));
+        $feed->add($item);
+
+        $json = json_decode((new JsonFormatter())->toString($feed), true);
+
+        $this->assertSame(['Feed author one', 'Feed author two'], array_column($json['authors'], 'name'));
+        $this->assertSame(['foo bar', 'Item author two'], array_column($json['items'][0]['authors'], 'name'));
+    }
+
     protected function getItem($title, $description)
     {
         $item = new Item();

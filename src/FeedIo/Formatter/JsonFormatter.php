@@ -69,11 +69,16 @@ class JsonFormatter implements FormatterInterface
 
     public function handleAuthor(Feed\NodeInterface $node, array &$array): array
     {
-        if (! is_null($node->getAuthor())) {
-            $array['authors'] = [array_filter([
-                'name' => $node->getAuthor()->getName(),
-                'url' => $node->getAuthor()->getUri(),
-            ])];
+        $authors = [];
+        foreach ($node->getAuthors() as $author) {
+            $authors[] = array_filter([
+                'name' => $author->getName(),
+                'url' => $author->getUri(),
+            ]);
+        }
+
+        if ($authors !== []) {
+            $array['authors'] = $authors;
         }
 
         return $array;

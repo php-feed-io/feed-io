@@ -54,14 +54,29 @@ class Node implements NodeInterface, ElementsAwareInterface, ArrayableInterface
         return $this;
     }
 
+    /**
+     * @deprecated Use getAuthors() instead. Planned for removal in the next major release.
+     */
     public function getAuthor(): ?AuthorInterface
     {
         return $this->author;
     }
 
+    /**
+     * @deprecated Use setAuthors() or addAuthor() instead. Planned for removal in the next major release.
+     */
     public function setAuthor(?AuthorInterface $author = null): NodeInterface
     {
+        $this->authors = $author === null ? [] : [$author];
         $this->author = $author;
+
+        return $this;
+    }
+
+    public function setAuthors(array $authors, ?AuthorInterface $primaryAuthor = null): NodeInterface
+    {
+        $this->authors = array_values($authors);
+        $this->author = $primaryAuthor ?? ($this->authors === [] ? null : $this->authors[array_key_last($this->authors)]);
 
         return $this;
     }
@@ -77,6 +92,10 @@ class Node implements NodeInterface, ElementsAwareInterface, ArrayableInterface
 
     public function addAuthor(AuthorInterface $author): NodeInterface
     {
+        if ($this->authors === [] && $this->author !== null) {
+            $this->authors[] = $this->author;
+        }
+
         $this->authors[] = $author;
         $this->author = $author;
 
@@ -390,7 +409,7 @@ class Node implements NodeInterface, ElementsAwareInterface, ArrayableInterface
         $properties = get_object_vars($this);
         $properties['elements'] = iterator_to_array($this->getElementsGenerator());
         $properties['categories'] = iterator_to_array($this->getCategoriesGenerator());
-        $properties['authors'] = new \ArrayIterator($this->authors);
+        $properties['authors'] = new \ArrayIterator([...$this->getAuthors()]);
 
         foreach ($properties as $name => $property) {
             if ($property instanceof \DateTime) {

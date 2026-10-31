@@ -35,7 +35,15 @@ class Author extends RuleAbstract
      */
     protected function hasValue(NodeInterface $node): bool
     {
-        return $node instanceof ItemInterface && !! $node->getAuthor();
+        if (! $node instanceof ItemInterface) {
+            return false;
+        }
+
+        foreach ($node->getAuthors() as $author) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -47,6 +55,13 @@ class Author extends RuleAbstract
      */
     protected function addElement(\DomDocument $document, \DOMElement $rootElement, NodeInterface $node): void
     {
-        $rootElement->appendChild($document->createElement($this->getNodeName(), $node->getAuthor()->getName()));
+        $author = null;
+        foreach ($node->getAuthors() as $currentAuthor) {
+            $author = $currentAuthor;
+        }
+
+        if ($author !== null) {
+            $rootElement->appendChild($document->createElement($this->getNodeName(), $author->getName()));
+        }
     }
 }

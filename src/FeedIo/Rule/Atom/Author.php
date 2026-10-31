@@ -24,16 +24,22 @@ class Author extends RuleAbstract
 
     protected function hasValue(NodeInterface $node): bool
     {
-        return !! $node->getAuthor();
+        foreach ($node->getAuthors() as $author) {
+            return true;
+        }
+
+        return false;
     }
 
     protected function addElement(DomDocument $document, DOMElement $rootElement, NodeInterface $node): void
     {
-        $element = $document->createElement(static::NODE_NAME);
-        $this->appendNonEmptyChild($document, $element, 'name', $node->getAuthor()->getName());
-        $this->appendNonEmptyChild($document, $element, 'uri', $node->getAuthor()->getUri());
-        $this->appendNonEmptyChild($document, $element, 'email', $node->getAuthor()->getEmail());
+        foreach ($node->getAuthors() as $author) {
+            $element = $document->createElement(static::NODE_NAME);
+            $this->appendNonEmptyChild($document, $element, 'name', $author->getName());
+            $this->appendNonEmptyChild($document, $element, 'uri', $author->getUri());
+            $this->appendNonEmptyChild($document, $element, 'email', $author->getEmail());
 
-        $rootElement->appendChild($element);
+            $rootElement->appendChild($element);
+        }
     }
 }

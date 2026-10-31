@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - fix: accept JSON Feed items without `date_published`, falling back to `date_modified` (#159)
 - fix: rewrite relative links in `content:encoded` and other optional elements, not only in `content`/`description` properties
+- Reset author collections when parsing into reused feeds and limit RSS 2.0 items to one core `author` element.
 
 ## Released
 ## [v6.5.0] - 2026-10-25

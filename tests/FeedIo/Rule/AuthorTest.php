@@ -69,4 +69,22 @@ class AuthorTest extends TestCase
 
         $this->assertXmlStringEqualsXmlString('<feed><author>'.self::AUTHOR.'</author></feed>', $document->saveXML());
     }
+
+    public function testCreateSingleElementForMultipleAuthors()
+    {
+        $item = new Item();
+        $item->setAuthors([
+            (new \FeedIo\Feed\Item\Author())->setName('John Doe'),
+            (new \FeedIo\Feed\Item\Author())->setName('Jane Roe'),
+        ]);
+
+        $document = new \DOMDocument();
+        $rootElement = $document->createElement('item');
+        $this->object->apply($document, $rootElement, $item);
+
+        $this->assertSame(['Jane Roe'], array_map(
+            static fn (\DOMElement $element): string => $element->nodeValue,
+            iterator_to_array($rootElement->childNodes)
+        ));
+    }
 }
