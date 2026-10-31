@@ -35,6 +35,7 @@ class XmlParser extends ParserAbstract
     public function parseContent(Document $document, FeedInterface $feed): FeedInterface
     {
         if ($this->standard instanceof XmlAbstract) {
+            $feed->setAuthors([]);
             $element = $this->standard->getMainElement($document->getDOMDocument());
             $this->parseNode($feed, $element, $this->standard->getFeedRuleSet());
         }

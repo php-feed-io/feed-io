@@ -113,20 +113,23 @@ class JsonParser extends ParserAbstract
 
     protected function readAuthor(NodeInterface $node, array $data): void
     {
+        $node->setAuthors([]);
+
         if (array_key_exists('authors', $data) && is_array($data['authors'])) {
             $first = null;
+            $authors = [];
             foreach ($data['authors'] as $authorData) {
                 if (!is_array($authorData)) {
                     continue;
                 }
                 $author = $this->extractAuthor($authorData);
                 $first ??= $author;
-                $node->addAuthor($author);
+                $authors[] = $author;
             }
             if ($first !== null) {
-                $node->setAuthor($first);
+                $node->setAuthors($authors, $first);
             }
-        } elseif (array_key_exists('author', $data)) {
+        } elseif (array_key_exists('author', $data) && is_array($data['author'])) {
             $node->addAuthor($this->extractAuthor($data['author']));
         }
     }

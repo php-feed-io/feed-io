@@ -65,6 +65,67 @@ class NodeTest extends TestCase
         $this->assertSame([$author], $this->object->getAuthors());
     }
 
+    public function testSetAuthorsReplacesAuthorsAndUpdatesLegacyGetter()
+    {
+        $first = $this->object->newAuthor()->setName('John Doe');
+        $second = $this->object->newAuthor()->setName('Jane Roe');
+        $this->object->addAuthor($this->object->newAuthor()->setName('Previous author'));
+
+        $this->object->setAuthors([4 => $first, 9 => $second]);
+
+        $this->assertSame([$first, $second], $this->object->getAuthors());
+        $this->assertSame($second, $this->object->getAuthor());
+    }
+
+    public function testSetAuthorsWithEmptyArrayClearsAuthors()
+    {
+        $this->object->addAuthor($this->object->newAuthor()->setName('John Doe'));
+
+        $this->object->setAuthors([]);
+
+        $this->assertSame([], $this->object->getAuthors());
+        $this->assertNull($this->object->getAuthor());
+    }
+
+    public function testSetAuthorReplacesAuthorsCollection()
+    {
+        $this->object->setAuthors([
+            $this->object->newAuthor()->setName('John Doe'),
+            $this->object->newAuthor()->setName('Jane Roe'),
+        ]);
+        $replacement = $this->object->newAuthor()->setName('Alex Smith');
+
+        $this->object->setAuthor($replacement);
+
+        $this->assertSame([$replacement], $this->object->getAuthors());
+        $this->assertSame($replacement, $this->object->getAuthor());
+    }
+
+    public function testSetAuthorReplacesAuthorsEvenWhenAuthorIsAlreadyInCollection()
+    {
+        $first = $this->object->newAuthor()->setName('John Doe');
+        $second = $this->object->newAuthor()->setName('Jane Roe');
+        $this->object->setAuthors([$first, $second]);
+
+        $this->object->setAuthor($first);
+
+        $this->assertSame([$first], $this->object->getAuthors());
+        $this->assertSame($first, $this->object->getAuthor());
+    }
+
+    public function testSetAuthorNullClearsAuthorsCollection()
+    {
+        $this->object->setAuthors([
+            $this->object->newAuthor()->setName('John Doe'),
+            $this->object->newAuthor()->setName('Jane Roe'),
+        ]);
+
+        $this->object->setAuthor(null);
+
+        $this->assertSame([], $this->object->getAuthors());
+        $this->assertNull($this->object->getAuthor());
+    }
+
     public function testToArrayIncludesEveryAuthor()
     {
         $this->object->addAuthor($this->object->newAuthor()->setName('John Doe'));
@@ -72,6 +133,15 @@ class NodeTest extends TestCase
 
         $authors = $this->object->toArray()['authors'];
         $this->assertEquals(['John Doe', 'Jane Roe'], array_column($authors, 'name'));
+    }
+
+    public function testToArrayIncludesAuthorSetWithLegacySetter()
+    {
+        $author = $this->object->newAuthor()->setName('John Doe');
+        $this->object->setAuthor($author);
+
+        $authors = $this->object->toArray()['authors'];
+        $this->assertEquals(['John Doe'], array_column($authors, 'name'));
     }
 
     public function testNewCategory()

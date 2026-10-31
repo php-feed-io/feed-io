@@ -96,4 +96,48 @@ class JsonParserTest extends TestCase
         $names = array_map(fn ($author) => $author->getName(), [...$feed->getAuthors()]);
         $this->assertEquals(['John Doe', 'Jane Roe'], $names);
     }
+
+    public function testParseContentReplacesAuthorsWhenFeedIsReused()
+    {
+        $parser = new JsonParser(new Json(new DateTimeBuilder()), new NullLogger());
+        $feed = new Feed();
+        $feed->addAuthor($feed->newAuthor()->setName('Stale author'));
+
+        $parser->parse(new Document(json_encode([
+            'version' => 'https://jsonfeed.org/version/1.1',
+            'title' => 'JSON Feed',
+            'authors' => [['name' => 'Current author']],
+            'items' => [],
+        ])), $feed);
+
+        $this->assertSame(['Current author'], array_map(
+            fn ($author) => $author->getName(),
+            [...$feed->getAuthors()]
+        ));
+
+        $parser->parse(new Document(json_encode([
+            'version' => 'https://jsonfeed.org/version/1.1',
+            'title' => 'JSON Feed',
+            'items' => [],
+        ])), $feed);
+
+        $this->assertSame([], [...$feed->getAuthors()]);
+    }
+
+    public function testParseContentIgnoresMalformedSingleAuthorAndClearsStaleAuthors()
+    {
+        $parser = new JsonParser(new Json(new DateTimeBuilder()), new NullLogger());
+        $feed = new Feed();
+        $feed->addAuthor($feed->newAuthor()->setName('Stale author'));
+
+        $parser->parse(new Document(json_encode([
+            'version' => 'https://jsonfeed.org/version/1.1',
+            'title' => 'JSON Feed',
+            'author' => 'not-an-author-object',
+            'items' => [],
+        ])), $feed);
+
+        $this->assertSame([], [...$feed->getAuthors()]);
+        $this->assertNull($feed->getAuthor());
+    }
 }

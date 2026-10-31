@@ -11,10 +11,9 @@
 namespace FeedIo\Parser;
 
 use FeedIo\Feed;
+use FeedIo\Reader\Document;
 use FeedIo\Rule\DateTimeBuilder;
 use FeedIo\Standard\Atom;
-
-use PHPUnit\Framework\TestCase;
 
 class AtomTest extends ParserTestAbstract
 {
@@ -51,5 +50,23 @@ class AtomTest extends ParserTestAbstract
         }
 
         $this->assertEquals(1, $count);
+    }
+
+    public function testParsingAgainReplacesFeedAuthors()
+    {
+        $feed = new Feed();
+        $document = new Document('<feed xmlns="http://www.w3.org/2005/Atom"><author><name>John Doe</name></author><author><name>Jane Roe</name></author></feed>');
+
+        $this->object->parseContent($document, $feed);
+        $this->object->parseContent($document, $feed);
+
+        $this->assertSame(['John Doe', 'Jane Roe'], array_map(
+            fn ($author) => $author->getName(),
+            [...$feed->getAuthors()]
+        ));
+
+        $this->object->parseContent(new Document('<feed xmlns="http://www.w3.org/2005/Atom"/>'), $feed);
+
+        $this->assertSame([], [...$feed->getAuthors()]);
     }
 }

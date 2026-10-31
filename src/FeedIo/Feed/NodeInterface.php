@@ -17,6 +17,7 @@ interface NodeInterface
     /**
      * returns the author attribute
      *
+      * @deprecated Use getAuthors() instead. Planned for removal in the next major release.
      * @return AuthorInterface|null
      */
     public function getAuthor(): ?AuthorInterface;
@@ -24,15 +25,25 @@ interface NodeInterface
     /**
      * sets $author to the object's attributes
      *
+    * @deprecated Use setAuthors() or addAuthor() instead. Planned for removal in the next major release.
      * @param AuthorInterface|null $author
      * @return NodeInterface
      */
     public function setAuthor(?AuthorInterface $author = null): NodeInterface;
 
     /**
+     * replaces all authors of the node, in document order
+     *
+     * @param AuthorInterface[] $authors
+     * @param AuthorInterface|null $primaryAuthor author returned by the deprecated getAuthor(), defaults to the last author
+     * @return NodeInterface
+     */
+    public function setAuthors(array $authors, ?AuthorInterface $primaryAuthor = null): NodeInterface;
+
+    /**
      * returns all the authors of the node, in document order
      *
-     * @return iterable
+    * @return iterable<AuthorInterface>
      */
     public function getAuthors(): iterable;
 
