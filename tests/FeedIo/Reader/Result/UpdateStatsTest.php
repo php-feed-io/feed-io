@@ -64,6 +64,45 @@ class UpdateStatsTest extends TestCase
         $this->assertEquals(time() + 86400, $nextUpdate->getTimestamp());
     }
 
+    public function testNextUpdateRespectsDefaultMinimumDelay()
+    {
+        $stats = $this->createStatsWithPendingUpdate();
+        $predictedTimestamp = $stats->addInterval(
+            $stats->getNewestItemDate(),
+            min($stats->getAverageInterval(), $stats->getMedianInterval()),
+            UpdateStats::DEFAULT_MARGIN_RATIO
+        );
+
+        $now = time();
+        $this->assertGreaterThan($now, $predictedTimestamp);
+        $this->assertLessThan($now + UpdateStats::DEFAULT_MIN_DELAY, $predictedTimestamp);
+
+        $before = time();
+        $nextUpdate = $stats->computeNextUpdate();
+
+        $this->assertGreaterThanOrEqual($before + UpdateStats::DEFAULT_MIN_DELAY, $nextUpdate->getTimestamp());
+    }
+
+    public function testNextUpdateRespectsCustomMinimumDelay()
+    {
+        $minDelay = 600;
+        $stats = $this->createStatsWithPendingUpdate();
+        $predictedTimestamp = $stats->addInterval(
+            $stats->getNewestItemDate(),
+            min($stats->getAverageInterval(), $stats->getMedianInterval()),
+            UpdateStats::DEFAULT_MARGIN_RATIO
+        );
+
+        $now = time();
+        $this->assertGreaterThan($now, $predictedTimestamp);
+        $this->assertLessThan($now + $minDelay, $predictedTimestamp);
+
+        $before = time();
+        $nextUpdate = $stats->computeNextUpdate($minDelay);
+
+        $this->assertGreaterThanOrEqual($before + $minDelay, $nextUpdate->getTimestamp());
+    }
+
 
     /**
      * Test getAverageInterval with a single interval
@@ -486,5 +525,18 @@ class UpdateStatsTest extends TestCase
             '-20 days',
             '-21 days',
         ];
+    }
+
+    private function createStatsWithPendingUpdate(): UpdateStats
+    {
+        $now = time();
+        $feed = new Feed();
+        foreach ([$now - 1800, $now - 3600] as $timestamp) {
+            $item = new Feed\Item();
+            $item->setLastModified((new \DateTime())->setTimestamp($timestamp));
+            $feed->add($item);
+        }
+
+        return new UpdateStats($feed);
     }
 }
