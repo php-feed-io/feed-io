@@ -117,7 +117,7 @@ class UpdateStats
      */
     public function getMinInterval(): int
     {
-        return !empty($this->intervals) ? min($this->intervals) : 0;
+        return $this->intervals !== [] ? min($this->intervals) : 0;
     }
 
     /**
@@ -125,7 +125,7 @@ class UpdateStats
      */
     public function getMaxInterval(): int
     {
-        return !empty($this->intervals) ? max($this->intervals) : 0;
+        return $this->intervals !== [] ? max($this->intervals) : 0;
     }
 
     /**
