@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add isPermaLink=false support to setPublicId() - (#103)
 
 ### Fixed
+- Respect the configured minimum delay when computing the next feed update (#151)
 - fix: rewrite relative links in `content:encoded` and other optional elements, not only in `content`/`description` properties
 
 ## Released
